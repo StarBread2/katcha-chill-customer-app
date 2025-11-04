@@ -17,6 +17,10 @@
     import CheckOut_Icon from '../assets/Home/CheckOut.svg';
     import Help_Icon from '../assets/Home/Help.svg';
 
+    //Check In
+        import KatchaChillLogo_Image_BW from '../assets/Check In/KatchaChillLogo_BW.svg';
+    //Check In
+
     //Crowd Details
         import Clock_Icon from '../assets/Crowd Details/Clock.svg';
         import Location_Icon from '../assets/Crowd Details/Location.svg';
@@ -31,6 +35,15 @@
     import ChevronLeft_Icon from '../assets/MyProgress/ChevronLeft.svg';
     import ChevronRight_Icon from '../assets/MyProgress/ChevronRight.svg';
 // My Progress
+
+// Settings
+    import CheckOut_Settings_Icon from '../assets/Settings/CheckOut.svg';
+    import Notification_Settings_Icon from '../assets/Settings/Notification.svg';
+    import Profile_Icon from '../assets/Settings/Profile.svg';
+    import QRCode_Icon from '../assets/Settings/QRCode.svg';
+    import SignOut_Icon from '../assets/Settings/SignOut.svg';
+    import ChevronRightRed_Icon from '../assets/Settings/ChevronRightRed.svg';
+// Settings
 
 
 
@@ -52,6 +65,9 @@
 
     //QR Code
     import QRPlaceholder_Image from '../assets/Partials/QRPlaceholder.png';
+
+    //Confirmation Modal
+    import Close_Icon from '../assets/Partials/close.svg';
 // Partial
 
 
@@ -69,11 +85,18 @@ export
 
     // Dashboard
         GymBg, GymCoin_Colored, Notification_Icon, Settings_Icon, CheckIn_Icon, CheckOut_Icon, Help_Icon,
+        //Check In
+            KatchaChillLogo_Image_BW,
+        //Check In
+
         //Crowd Details
             Clock_Icon, Location_Icon, Phone_Icon, ChevronUp_Icon,
         //Crowd Details
     // Dashboard
 
+    // Settings
+        CheckOut_Settings_Icon, Notification_Settings_Icon, Profile_Icon, QRCode_Icon, SignOut_Icon, ChevronRightRed_Icon,
+    // Settings
 
 
 
@@ -102,8 +125,11 @@ export
         //FooterButton
 
         //QR Code
-            QRPlaceholder_Image
+            QRPlaceholder_Image,
         //QR Code
+        //Confirmation Modal
+            Close_Icon
+        //Confirmation Modal
     // Partial
 };
 

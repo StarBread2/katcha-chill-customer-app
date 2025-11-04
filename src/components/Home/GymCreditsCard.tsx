@@ -27,14 +27,15 @@ export default function GymCreditsCard({GymCoins}: HeaderProps) {
                 </div>
 
                 {/* 🔹 Right Section */}
-                <Link to="/home/AddCredits">
                     <div className="flex flex-col items-center">
                         <img src={GymCoin_Colored} alt="Gym" className="w-22 h-22 mb-2" />
-                        <button className="bg-black text-white text-sm rounded-full px-5 py-2.5">
-                            Add Credits
-                        </button>
+                        <Link to="/home/AddCredits">
+                            <button className="bg-black text-white text-sm rounded-full px-5 py-2.5">
+                                Add Credits
+                            </button>
+                        </Link>
                     </div>
-                </Link>
+                
             </div>
         </div>
     );

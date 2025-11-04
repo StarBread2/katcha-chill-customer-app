@@ -138,7 +138,7 @@ const CrowdHistoryChart = memo(function CrowdHistoryChart()
 
                     {/* Footer */}
                     <p className="text-xs text-[#434343] font-semibold mb-6">
-                    Meter based on recent average activity
+                        Meter based on recent average activity
                     </p>
                 </div> 
             {/* ========== ANIMATION ========== */}

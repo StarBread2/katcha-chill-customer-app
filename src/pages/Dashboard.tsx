@@ -1,6 +1,6 @@
 import { useUser } from "../context/UserContext";
 import { supabase } from "../lib/supabaseClient";
-import { useNavigate } from "react-router-dom"; //NOT USED YET (FOR LOGOUT)
+import { useNavigate } from "react-router-dom"; 
 
 import Header from "../components/Home/Header"
 import CrowdMeter from "../components/Home/CrowdMeter.tsx"
@@ -12,15 +12,6 @@ import { Ring } from "@uiball/loaders"; // FOR LOADING ANIMATION
 
 export default function Dashboard() 
 {
-    const navigate = useNavigate();
-    // #region NOT USED YET (FOR LOGOUT)
-        const handleLogout = async () => 
-        {
-            await supabase.auth.signOut();
-            navigate("/login");
-        };
-    // #endregion
-
     // #region QUERY
         const NotifState=true; //FOR FUTURE IF THERE IS NOTIFICATION
         const { user, profile, loading, refreshProfile, qrDataUrl } = useUser();
@@ -28,7 +19,6 @@ export default function Dashboard()
 
     // #region IF LOADING (loading animation)
         // Show loading animation if still fetching user/profile
-        // Show TailChase loader while fetching
         if (loading) 
         {
             return (

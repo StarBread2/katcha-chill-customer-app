@@ -11,12 +11,12 @@ export default function CrowdDetails()
     const customerCount = 20;
 
     return (
-        <div className="min-h-screen bg-[#E6E6E6]">
+        <div className="min-h-screen bg-white">
             <div className="px-2 bg-white">
                 <HeaderNav title="Crowd Details" backRoute="/home" />
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col pt-[100px]">
                 <div className="flex flex-col px-6 bg-white">
                     <Header CustomerLimit={Customerlimit} CustomerCount={customerCount}/>
                     {/* line */}

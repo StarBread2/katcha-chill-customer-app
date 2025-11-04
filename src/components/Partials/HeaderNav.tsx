@@ -1,22 +1,7 @@
+import { createPortal } from "react-dom"; //FOR RENDERING IN DIV (Z-1) FOR NAVBARS
+
 import { useNavigate } from "react-router-dom";
 import BackButton_Icon from "../../assets/HeaderNavBar/ChevronLeft.png";
-
-import { motion } from "framer-motion";
-
-// how to use
-// Basic (no bottom navigator)
-// <HeaderNav title="Check-in" /> 
-
-// With 2-step navigator
-// <HeaderNav title="Check-in" showNavigator segments={2} activeSegment={1} />
-
-// With 3-step navigator
-// <HeaderNav title="Registration" showNavigator segments={3} activeSegment={2} />
-
-// With Back button behavior
-// <HeaderNav title="Check-in" onBack={() => navigate(-1)} showNavigator /> 
-
-
 
 interface HeaderNavProps {
     /** The main title in the center */
@@ -36,22 +21,45 @@ interface HeaderNavProps {
 
     /** Optional back route (used if no onBack is provided) */
     backRoute?: string;
+
+    /** Toggle visibility of back button (default: true) */
+    showBackButton?: boolean;
+
+    /** callback when back button is pressed */
+    onBackPressed?: (pressed: boolean) => void;
+
+    /** Disable navigation when back button is pressed (default: false) */
+    disableBackNavigation?: boolean;
 }
 
-export default function HeaderNav({
+export default function HeaderNav(
+{
     title,
     showNavigator = false,
     segments = 2,
     activeSegment = 1,
     onBack,
     backRoute,
-    }: HeaderNavProps) 
+    showBackButton = true,
+    onBackPressed,
+    disableBackNavigation = false,
+}: HeaderNavProps) 
     {
         const navigate = useNavigate();
 
         // Smart back handler
         const handleBack = () => 
         {
+            // Trigger callback with "true"
+            if (onBackPressed) 
+            {
+                onBackPressed(true);
+            }
+
+            // If temporarily disabled, stop here
+            if (disableBackNavigation) return;
+
+
             if (onBack) 
             {
                 onBack(); // manual handler (custom behavior)
@@ -66,13 +74,21 @@ export default function HeaderNav({
             }
         };
 
-        return (
-            <div className="w-full">
+        return createPortal(
+            
+            <div className="fixed top-0 left-0 w-full bg-white">
                 {/* 🔹 Top Header */}
-                <div className="flex items-center justify-between px-4 pt-14 pb-4">
-                    <button onClick={handleBack} className="flex items-center">
-                    <img src={BackButton_Icon} alt="Back" className="w-7 h-7" />
-                    </button>
+                <div className="flex items-center justify-between px-4 pt-14 pb-2">
+
+                    {/* TOGGLE TO SHOW THE BACK BUTTON */}
+                    {showBackButton ? (
+                        <button onClick={handleBack} className="flex items-center">
+                            <img src={BackButton_Icon} alt="Back" className="w-7 h-7" />
+                        </button>
+                    ) : (
+                        // Empty spacer to keep layout centered
+                        <div className="w-7 h-7" />
+                    )}
 
                     <h2 className="font-montserrat font-bold text-lg text-center flex-1 text-black">
                     {title}
@@ -83,11 +99,11 @@ export default function HeaderNav({
 
                 {/* 🔹 Optional Bottom Navigator */}
                 {showNavigator && (
-                <div className="flex w-full px-4 gap-2">
+                <div className="flex w-full px-4 gap-1">
                 {Array.from({ length: segments }).map((_, i) => (
                     <div
                     key={i}
-                    className={`h-[3px] rounded-full transition-all duration-300 ${
+                    className={`h-[4px] rounded-full transition-all duration-300 ${
                         i + 1 === activeSegment
                         ? "bg-black flex-1"
                         : "bg-gray-300 flex-1"
@@ -96,6 +112,6 @@ export default function HeaderNav({
                 ))}
                 </div>
             )}
-            </div>
+            </div>, document.body
         );
 }

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+
 //ONBOARDING
 import Onboarding1 from "./pages/Onboarding/Onboarding1.tsx";
 import Login from "./pages/Onboarding/Login.tsx";
@@ -17,22 +18,140 @@ import CheckIn from "./pages/CheckIn.tsx";
 //CHECKIN
 import AddCredits from "./pages/AddCredits.tsx";
 
+//SETTINGS
+import Settings from "./pages/Settings.tsx";
+
 // PARTIALS
 import BottomNav from "./components/Partials/BottomNav.tsx";
 import "./App.css";
 
+//ANIMATIONS
+import PageTransition from "./components/Transitions/PageTransition.tsx";
+
+//SECURITY
+//PROTECTED ROUTES
+import ProtectedRoute from "./auth/ProtectedRoute.tsx";
+
+//SCROLL TO TOP
+import ScrollToTop from "./components/ScrollToTop.tsx";
+
+//NOTIFICATIONS
+import { Toaster } from "sonner";
+
+
 function AppContent() {
   const location = useLocation();
 
-  const hideNavRoutes = ["/home/crowd", "/", "/login", "/home/checkIn", "/home/AddCredits"]; // HIDE ROUTE PARAMETERS
+  const hideNavRoutes = ["/home/crowd", "/", "/login", "/home/checkIn", "/home/AddCredits" ]; // HIDE ROUTE PARAMETERS
 
   const shouldHideNav = hideNavRoutes.includes(location.pathname);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       {/* Page content */}
-      <div className="flex-1">
-        <Routes>
+      <div className="flex-1 relative h-full overflow-hidden">
+
+        {/* ========== LOGIN ========== */}
+          <Routes location={location} key={location.pathname}>
+            <Route
+              path="/"
+              element={
+                <PageTransition>
+                  <Onboarding1 />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <PageTransition>
+                  <Login />
+                </PageTransition>
+              }
+            />
+          {/* ========== LOGIN ========== */}
+
+
+          {/* ========== MAIN ========== */}
+            <Route
+              path="/progress"
+              element={
+                <ProtectedRoute>
+                  <PageTransition>
+                    <MyProgress />
+                  </PageTransition>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <PageTransition>
+                    <Dashboard />
+                  </PageTransition>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/store"
+              element={
+                <ProtectedRoute>
+                  <PageTransition>
+                    <Store />
+                  </PageTransition>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <PageTransition>
+                    <Settings />
+                  </PageTransition>
+                </ProtectedRoute>
+              }
+            />
+          {/* ========== MAIN ========== */}
+
+
+          {/* ========== EXTRAS ========== */}
+            <Route
+              path="/home/crowd"
+              element={
+                <ProtectedRoute>
+                  <PageTransition type="slide-left">
+                    <CrowdDetails />
+                  </PageTransition>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/home/checkIn"
+              element={
+                <ProtectedRoute>
+                  <PageTransition type="slide-left">
+                    <CheckIn />
+                  </PageTransition>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/home/AddCredits"
+              element={
+                <ProtectedRoute>
+                  <PageTransition type="slide-left">
+                    <AddCredits />
+                  </PageTransition>
+                </ProtectedRoute>
+              }
+            />
+          {/* ========== EXTRAS ========== */}
+        </Routes>
+
+
+        {/* <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Onboarding1 />} />
           <Route path="/login" element={<Login />} />
 
@@ -40,10 +159,10 @@ function AppContent() {
           <Route path="/home" element={<Dashboard />} />
           <Route path="/store" element={<Store />} />
 
-          <Route path="/home/crowd" element={<CrowdDetails />} />
-          <Route path="/home/checkIn" element={<CheckIn />} />
-          <Route path="/home/AddCredits" element={<AddCredits />} />
-        </Routes>
+          <Route path="/home/crowd" element={<CrowdDetails/>} />
+          <Route path="/home/checkIn" element={<CheckIn/>} />
+          <Route path="/home/AddCredits" element={<AddCredits/>} />
+        </Routes> */}
       </div>
 
       {!shouldHideNav && <BottomNav />}
@@ -54,7 +173,15 @@ function AppContent() {
 export default function App() {
   return (
     <Router>
+      <ScrollToTop />
       <AppContent />
+      <Toaster
+        position="top-right"
+        richColors
+        toastOptions={{
+          className: "font-montserrat rounded-2xl shadow-md p-10",
+        }}
+      />
     </Router>
   );
 }
