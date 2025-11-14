@@ -32,6 +32,7 @@
 // My Progress
     import ClockRed_Icon from '../assets/MyProgress/Time.svg';
     import Check_Icon from '../assets/MyProgress/Check.svg';
+    import Fire_Icon from '../assets/MyProgress/Fire.svg';
     import ChevronLeft_Icon from '../assets/MyProgress/ChevronLeft.svg';
     import ChevronRight_Icon from '../assets/MyProgress/ChevronRight.svg';
 // My Progress
@@ -43,6 +44,7 @@
     import QRCode_Icon from '../assets/Settings/QRCode.svg';
     import SignOut_Icon from '../assets/Settings/SignOut.svg';
     import ChevronRightRed_Icon from '../assets/Settings/ChevronRightRed.svg';
+    import HealthConnect_Icon from '../assets/Settings/HealthConnect.svg';
 // Settings
 
 
@@ -62,6 +64,9 @@
 
     //FooterButton
     import Download_Icon from '../assets/Partials/Download.svg';
+    import Minus_Icon from '../assets/Partials/Minus.svg';
+    import Plus_Icon from '../assets/Partials/Plus.svg';
+    import PlusBlack_Icon from '../assets/Partials/PlusBlack.svg';
 
     //QR Code
     import QRPlaceholder_Image from '../assets/Partials/QRPlaceholder.png';
@@ -95,13 +100,13 @@ export
     // Dashboard
 
     // Settings
-        CheckOut_Settings_Icon, Notification_Settings_Icon, Profile_Icon, QRCode_Icon, SignOut_Icon, ChevronRightRed_Icon,
+        CheckOut_Settings_Icon, Notification_Settings_Icon, Profile_Icon, QRCode_Icon, SignOut_Icon, ChevronRightRed_Icon, HealthConnect_Icon,
     // Settings
 
 
 
     // My Progress
-        ClockRed_Icon, Check_Icon, ChevronLeft_Icon, ChevronRight_Icon,
+        ClockRed_Icon, Check_Icon, Fire_Icon, ChevronLeft_Icon, ChevronRight_Icon, 
     // My Progress
 
 
@@ -121,7 +126,7 @@ export
         //HeaderNavBar
 
         //FooterButton
-            Download_Icon, 
+            Download_Icon, Minus_Icon, Plus_Icon, PlusBlack_Icon,
         //FooterButton
 
         //QR Code

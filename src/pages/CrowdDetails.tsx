@@ -1,4 +1,3 @@
-
 import HeaderNav from "../components/Partials/HeaderNav";
 import Header from "../components/Crowd Details/Header.tsx";
 import CrowdHistoryChart from "../components/Crowd Details/CrowdHistory";

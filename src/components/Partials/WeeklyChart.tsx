@@ -1,27 +1,33 @@
+import { div } from "framer-motion/client";
 import { ChevronLeft_Icon, ChevronRight_Icon } from "../../assets/index.ts";
 
-export default function WeeklyChart() {
-    const weeklyData = [
-        { day: "S", value: 30 },
-        { day: "M", value: 65 },
-        { day: "T", value: 77 },
-        { day: "W", value: 0 },
-        { day: "T", value: 0 },
-        { day: "F", value: 77 },
-        { day: "S", value: 150 },
-    ];
+interface WeeklyData 
+{
+    day: string;
+    value: number;
+}
+
+interface weeklyDataInterface 
+{
+    weeklyData: WeeklyData[];
+    barColor?: string;
+    chartTitle: string;
+}
+
+export default function WeeklyChart({ weeklyData, barColor, chartTitle }: weeklyDataInterface) 
+{
 
     const maxHeight = 130; // max bar height in px
     const barWidth = 35; // fixed width for each bar
     const maxValue = Math.max(...weeklyData.map((d) => d.value));
 
     return (
-        <main className="mt-8 bg-white rounded-[20px] p-5 pb-10 w-[90%] space-y-6 mx-auto shadow-sm">
+        <div>
             {/* Header */}
             <section>
                 <div className="flex justify-between items-center">
                     <div>
-                        <h3 className="font-semibold text-base">Weekly Activity</h3>
+                        <h3 className="font-semibold text-base">{chartTitle}</h3>
                         <p className="text-xs text-[#434343]">Sep 20 - Now</p>
                     </div>
 
@@ -41,7 +47,7 @@ export default function WeeklyChart() {
                 </div>
 
                 {/* Chart Container */}
-                <div className="w-full bg-white rounded-xl px-0 shadow-sm mt-6">
+                <div className="w-full rounded-xl px-0 shadow-sm mt-6">
                     <div className="flex justify-between items-end h-[160px] px-2">
                         {weeklyData.map((data, index) => {
                         const height = (data.value / maxValue) * maxHeight;
@@ -65,9 +71,10 @@ export default function WeeklyChart() {
 
                                     {/* Foreground (black) bar */}
                                     <div
-                                        className="absolute bottom-0 w-full rounded-md rounded-b-none bg-black flex items-center justify-center text-white text-xs font-medium transition-all duration-300"
+                                        className="absolute bottom-0 w-full rounded-md rounded-b-none flex items-center justify-center text-white text-xs font-medium transition-all duration-300"
                                         style={{
                                             height: `${adjustedHeight}px`,
+                                            backgroundColor: barColor ?? "#000000",
                                             zIndex: 0,
                                         }}
                                     >
@@ -85,6 +92,6 @@ export default function WeeklyChart() {
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
     );
 }

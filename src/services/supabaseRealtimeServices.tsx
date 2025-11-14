@@ -29,34 +29,35 @@ export function startPurchaseListener(userId: string, onPaid: () => void): Promi
             (payload) => {
                 const updated = payload.new as any;
 
-                if (updated.purchase_state === "paid") {
-                const formattedDate = new Date(updated.created_at).toLocaleString(
-                    "en-US",
-                    {
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                    hour12: true,
-                    }
-                );
+                if (updated.purchase_state === "paid") 
+                {
+                    const formattedDate = new Date(updated.created_at).toLocaleString(
+                        "en-US",
+                        {
+                        month: "short",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                        }
+                    );
 
-                createPortal(
-                    toast("✅ Purchase Successful", {
-                    description: `Your transaction made on ${formattedDate} has been processed by our worker.`,
-                    duration: 10000,
-                    }),
-                    document.body
-                );
+                    createPortal(
+                        toast("✅ Purchase Successful", {
+                        description: `Your transaction made on ${formattedDate} has been processed by our worker.`,
+                        duration: 10000,
+                        }),
+                        document.body
+                    );
 
-                console.log("✅ Purchase marked as paid — refreshing user profile...");
-                onPaid();
+                    console.log("✅ Purchase marked as paid — refreshing user profile...");
+                    onPaid();
 
-                console.log("🛑 Stopping listener for credit_purchases — purchase is now paid");
-                supabase.removeChannel(channel);
+                    console.log("🛑 Stopping listener for credit_purchases — purchase is now paid");
+                    supabase.removeChannel(channel);
 
-                // ✅ Resolve the promise after toast is shown and callback done
-                resolve(updated);
+                    // ✅ Resolve the promise after toast is shown and callback done
+                    resolve(updated);
                 }
             }
             )

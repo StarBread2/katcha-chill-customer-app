@@ -21,16 +21,22 @@ interface Package
 interface AddCredits_Main1Props 
 {
     packages: Package[];
-    selectedPackage: (pkg: Package) => void;
+
+    //Selected Package
+    selectedPackage?: Package | null;
+    setSelectedPackage: (pkg: Package) => void;
 
     //IF Bottom navbar BUTTON IS PRESSED
-    buttonPressed: (value: boolean) => void;
+    setButtonPressed: (value: boolean) => void;
 
     // IF Bottom navbar BUTTON IS PRESSABLE
     buttonPressable: boolean;
+
+    setquantityTotal: (value: number) => void;
+    setamountTotal: (value: number) => void;
 }
 
-export default function AddCredits_Segment1({ packages, selectedPackage, buttonPressed, buttonPressable }: AddCredits_Main1Props) 
+export default function AddCredits_Segment1({ packages, selectedPackage, setSelectedPackage, setButtonPressed: buttonPressed, buttonPressable, setquantityTotal, setamountTotal }: AddCredits_Main1Props) 
 {
     return (
         <div>
@@ -45,10 +51,13 @@ export default function AddCredits_Segment1({ packages, selectedPackage, buttonP
                     </p>
                 </div>
 
-                <PackageRenderer packages={packages} onSelect={selectedPackage} />
+                <PackageRenderer packages={packages} onSelect={setSelectedPackage} />
             </div>
 
-            <FooterButton label="Next" onReturnBool={buttonPressed} canPress={buttonPressable}/>
+            <FooterButton label="Next" 
+                onReturnBool={buttonPressed} canPress={buttonPressable} 
+                renderAmount={true} canChangeQuantity={selectedPackage?.stackable || false} defaultQuantityValue={1} maxQuantityValue={10} price={selectedPackage?.price || 0} 
+                setamountTotal={setamountTotal} setquantityTotal={setquantityTotal}/>
         </div>
     );
 }

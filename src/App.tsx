@@ -1,40 +1,40 @@
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 //ONBOARDING
 import Onboarding1 from "./pages/Onboarding/Onboarding1.tsx";
 import Login from "./pages/Onboarding/Login.tsx";
-
 //MAIN
 import Dashboard from "./pages/Dashboard.tsx";
 import MyProgress from "./pages/MyProgress.tsx";
 import Store from "./pages/Store.tsx";
-
 //SETTINGS
 import CrowdDetails from "./pages/CrowdDetails.tsx";
-
 //CHECKIN
 import CheckIn from "./pages/CheckIn.tsx";
-
 //CHECKIN
 import AddCredits from "./pages/AddCredits.tsx";
-
 //SETTINGS
 import Settings from "./pages/Settings.tsx";
+//AVAILABLE CREDITS
+import AvailableCredits from "./pages/AvailableCredits.tsx";
+//PAGE NOT FOUND
+import PageNotFound from "./pages/PageNotFound.tsx";
 
 // PARTIALS
 import BottomNav from "./components/Partials/BottomNav.tsx";
 import "./App.css";
 
+
 //ANIMATIONS
 import PageTransition from "./components/Transitions/PageTransition.tsx";
-
 //SECURITY
 //PROTECTED ROUTES
 import ProtectedRoute from "./auth/ProtectedRoute.tsx";
-
 //SCROLL TO TOP
 import ScrollToTop from "./components/ScrollToTop.tsx";
-
 //NOTIFICATIONS
 import { Toaster } from "sonner";
 
@@ -42,7 +42,7 @@ import { Toaster } from "sonner";
 function AppContent() {
   const location = useLocation();
 
-  const hideNavRoutes = ["/home/crowd", "/", "/login", "/home/checkIn", "/home/AddCredits" ]; // HIDE ROUTE PARAMETERS
+  const hideNavRoutes = ["/home/crowd", "/", "/login", "/home/checkIn", "/home/AddCredits", "/home/availableCredits", "*" ]; // HIDE ROUTE PARAMETERS
 
   const shouldHideNav = hideNavRoutes.includes(location.pathname);
 
@@ -147,7 +147,27 @@ function AppContent() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/home/availableCredits"
+              element={
+                <ProtectedRoute>
+                  <PageTransition type="slide-left">
+                    <AvailableCredits />
+                  </PageTransition>
+                </ProtectedRoute>
+              }
+            />
           {/* ========== EXTRAS ========== */}
+
+
+          <Route
+            path="*"
+            element={
+              <PageTransition>
+                <PageNotFound />
+              </PageTransition>
+            }
+          />
         </Routes>
 
 

@@ -1,4 +1,4 @@
-import { CheckOut_Settings_Icon, Profile_Icon, QRCode_Icon, SignOut_Icon, ChevronRight_Icon, ChevronRightRed_Icon } from "../../assets/index.ts";
+import { CheckOut_Settings_Icon, Profile_Icon, QRCode_Icon, SignOut_Icon, ChevronRight_Icon, ChevronRightRed_Icon, HealthConnect_Icon } from "../../assets/index.ts";
 
 type ChoicesProps = 
 {
@@ -35,6 +35,17 @@ export default function Choices_Settings({ onSignOut }: ChoicesProps)
                     <div className="flex items-center gap-4">
                         <img src={CheckOut_Settings_Icon} className="w-5 h-5" alt="Check Out" />
                         <span className="text-sm text-black font-semibold">Check Out</span>
+                    </div>
+                    <img src={ChevronRight_Icon} className="w-6 h-6" alt="Profile" />
+                </button>
+
+                <button
+                    className="flex items-center justify-between px-6 py-3 bg-white rounded-md"
+                    // onClick={onQRCode}
+                >
+                    <div className="flex items-center gap-4">
+                        <img src={HealthConnect_Icon} className="w-5 h-5" alt="QR Code" />
+                        <span className="text-sm text-black font-semibold">Health Connect</span>
                     </div>
                     <img src={ChevronRight_Icon} className="w-6 h-6" alt="Profile" />
                 </button>

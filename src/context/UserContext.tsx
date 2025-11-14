@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { useAuth } from "../auth/AuthProvider";
@@ -13,6 +12,7 @@ import { supabase } from "../lib/supabaseClient";
 
 import { getPendingPurchaseByUser } from "../services/purchaseService";
 import { startPurchaseListener } from "../services/supabaseRealtimeServices";
+import { getUserPackages } from "../services/userPackageService";
 
 type UserProfile = {
     id?: string;
@@ -38,6 +38,11 @@ type UserContextType = {
 
     //manually stop scanning for credit_purchases
     stopPurchaseListener: () => void;
+
+    //Get User packages and refresher
+    userPackages: UserPackage[];
+    refreshUserPackages: () => Promise<void>;
+
 };
 
 // FOR CREDIT PACKAGES
@@ -51,6 +56,18 @@ type CreditPackage = {
     stackable: boolean;
 };
 
+// FOR USER PACKAGES
+type UserPackage = {
+    user_package_id: number;
+    user_id: string;
+    package_id: string;
+    expiration_date: string;
+    credits_remaining: number;
+    status: "active" | "expired" | "used_up";
+    purchased_at: string;
+    transaction_id: number;
+};
+
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
@@ -62,7 +79,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
 
+    // JSON DATA BROS
     const [packages, setPackages] = useState<CreditPackage[]>([]);
+    
 
     const fetchProfile = async () => 
     {
@@ -266,6 +285,31 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }, [user]);
     //#endregion
 
+    //#region user_packages
+        const [userPackages, setUserPackages] = useState<UserPackage[]>([]);
+
+        const fetchUserPackages = async () => 
+        {
+            if (!user?.id) return;
+            console.log("Fetching fetchUserPackages")
+            try 
+            {
+                const data = await getUserPackages(user.id);
+                setUserPackages(data);
+            } 
+            catch (err) 
+            {
+                console.error("Error fetching user packages:", err);
+                setUserPackages([]);
+            }
+        };
+
+        useEffect(() => 
+        {
+            if (user) fetchUserPackages();
+        }, [user]);
+    //#endregion
+
     return (
         <UserContext.Provider
             value={{
@@ -277,6 +321,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 refreshQr,
                 packages,
                 refreshPackages: fetchPackages,
+                userPackages,
+                refreshUserPackages: fetchUserPackages,
                 watchPendingPurchase,
                 stopPurchaseListener,
             }}>

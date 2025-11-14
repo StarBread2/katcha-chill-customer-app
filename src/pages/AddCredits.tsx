@@ -54,6 +54,7 @@ export default function AddCredits()
         }
     };
 
+    // ========================================UPDATE HERE TO MAKE THE AMOUNT CHANGEABLE (HARDCODED YET) ========================================
     // Start scanning for pending purchases
     // Data row insertion and collection of the data inserted
     // Whenever segment1ButtonPressed becomes true → show segment 2 (if segment1Button is pressed)
@@ -68,8 +69,8 @@ export default function AddCredits()
                 {
                     user_id: profile.id,
                     package_id: selectedPackage.package_id,
-                    package_amount: selectedPackage.coins,
-                    amount_paid: selectedPackage.price ?? 0,
+                    package_amount: quantityTotal,
+                    amount_paid: amountTotal,
                     payment_method: null,
                     purchase_state: "pending" as const,
                 };
@@ -148,6 +149,10 @@ export default function AddCredits()
 
     // #region 1
         const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
+        //PACKAGE AMOUNT AND TOTAL PRICE
+        const [quantityTotal, setquantityTotal] = useState(1);
+        const [amountTotal, setamountTotal] = useState(0);
+
         const [segment1ButtonPressed, setSegment1ButtonPressed] = useState<boolean>(false); // segment1 button is pressed (will go to next segment)
 
         // If segment1 button is pressable or not
@@ -235,7 +240,8 @@ export default function AddCredits()
                     {/* Conditional rendering */}
                     {showSegment1 ? 
                     (
-                        <Segment1 packages={packages} selectedPackage={setSelectedPackage} buttonPressed={setSegment1ButtonPressed} buttonPressable={segment1ButtonPressable}/>
+                        <Segment1 packages={packages} selectedPackage={selectedPackage} setSelectedPackage={setSelectedPackage} setButtonPressed={setSegment1ButtonPressed} buttonPressable={segment1ButtonPressable}
+                            setamountTotal={setamountTotal} setquantityTotal={setquantityTotal}/>
                     ) : (
                         <Segment2 pendingPurchase={pendingPurchase} headerBackPressed={HeaderBackPressed} onResetHeaderBackPressed={setHeaderBackPressed} buttonPressed_Modal={setcloseModalPressed}/>
                     )}

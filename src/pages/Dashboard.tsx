@@ -1,6 +1,4 @@
 import { useUser } from "../context/UserContext";
-import { supabase } from "../lib/supabaseClient";
-import { useNavigate } from "react-router-dom"; 
 
 import Header from "../components/Home/Header"
 import CrowdMeter from "../components/Home/CrowdMeter.tsx"

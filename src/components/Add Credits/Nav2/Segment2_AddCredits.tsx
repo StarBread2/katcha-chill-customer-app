@@ -138,7 +138,7 @@ export default function MainDisplay_AddCredits({ pendingPurchase, headerBackPres
             handleDelete();
         }, [modalAgreeButtonClicked]);
     //#endregion
-
+    
     return (
         <div>
             
@@ -184,9 +184,10 @@ export default function MainDisplay_AddCredits({ pendingPurchase, headerBackPres
                 <h3 className="pb-3 text-3xl font-semibold text-center">Credits Top-up</h3>
 
                 <p className="text-black mb-3 text-center -mx-4">
-                    You’re purchasing the{" "}
-                    <span className="font-semibold">{packageName}</span>. Kindly prepare{" "}
-                    <span className="font-semibold">₱{price}</span> and let our staff
+                    You’re purchasing 
+                    <span className="font-semibold"> {pendingPurchase.package_amount}</span>
+                    <span className="font-semibold"> {packageName}</span>. Kindly prepare
+                    <span className="font-semibold"> ₱{pendingPurchase.amount_paid}</span> and let our staff
                     scan this QR to complete your transaction.
                 </p>
 

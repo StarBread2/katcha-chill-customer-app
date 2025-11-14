@@ -20,7 +20,9 @@
     "react-dom": "^19.1.1",
     "react-pull-to-refresh": "^2.0.1",
     "react-router-dom": "^7.9.4",
+    "react-slick": "^0.31.0",
     "recharts": "^3.3.0",
+    "slick-carousel": "^1.8.1",
     "sonner": "^2.0.7"
   },
   "devDependencies": {
@@ -29,6 +31,7 @@
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "@types/react-slick": "^0.23.13",
     "@vitejs/plugin-react": "^5.0.4",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.36.0",
