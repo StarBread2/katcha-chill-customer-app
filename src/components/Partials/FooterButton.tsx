@@ -40,6 +40,11 @@ interface BottomButtonProps {
     
     setquantityTotal?: (value: number) => void;
     setamountTotal?: (value: number) => void;
+
+    //Show error or nah?
+    displayError?: boolean;
+    //What's the error?
+    errorMessage?: string;
 }
 
 const FooterButton: React.FC<BottomButtonProps> = ({
@@ -62,6 +67,9 @@ const FooterButton: React.FC<BottomButtonProps> = ({
     setquantityTotal,
     setamountTotal,
     price = 0,
+
+    displayError = false,
+    errorMessage = false,
 }) => 
 {
     const navigate = useNavigate();
@@ -99,29 +107,33 @@ const FooterButton: React.FC<BottomButtonProps> = ({
     const buttonText = disabledStyles ? "text-white" : textColor;
     const cursorStyle = disabledStyles ? "cursor-not-allowed opacity-60" : "cursor-pointer";
 
-    // For amount slider appearance
-        const containerHeight = renderAmount ? "h-[185px]" : "h-[115px]"; //const containerHeight = renderAmount ? "h-[155px]" : "h-[115px]";
+    // For amount slider appearance [185px]
+        // FOR MAIN CONTAINER SIZE
+        const containerHeight = displayError ? "h-[185px]" : renderAmount ? "h-[155px]" : "h-[115px]";
+        const marginAmountPart = displayError ?  "mt-[26px]" : "mt-3";
         const marginTopButton = renderAmount ?  "" : "mt-6";
+
         //if cant change amount
-        const buttonAdd = canChangeAmount ?  "bg-black" : "bg-white";
-        const amountNumColor = canChangeAmount ?  "text-black" : "text-gray-500";
+            //if amount is maxed
+            const [isAmountMaxed, setisAmountMaxed] = useState(false);
+            const [makeAmountPressable, setMakeAmountPressable] = useState(false);
 
+            const buttonAdd = makeAmountPressable ?  "bg-black" : "bg-white";
+            const amountNumColor = makeAmountPressable ?  "text-black" : "text-gray-500";
 
-        //FOR DISPLAYING ERROR MESSAGES
-        const displayError = false;
-        const errorMessage = "test";
-
-
-        //FOR AMOUNT VALUE CALCULATION
-        const [quantityValue, setQuantityValue] = useState(defaultAmountValue);
+            //FOR AMOUNT VALUE CALCULATION
+            const [quantityValue, setQuantityValue] = useState(defaultAmountValue);
 
         //#region functions and usestate
             const addAmountValue = () =>
             {
                 if (!canChangeAmount) return;
-                setQuantityValue((prev) => {
-                    if (prev >= maxAmountValue) return prev; // stop at the max
-                    
+                setQuantityValue((prev) => 
+                {
+                    if (prev >= maxAmountValue) 
+                    {
+                        return prev; // stop at the max
+                    }
                     return prev + 1;
                 });
             }
@@ -133,17 +145,35 @@ const FooterButton: React.FC<BottomButtonProps> = ({
             // reset amount when cannot change amount 
             useEffect(() => 
             {
-                if (!canChangeAmount) {
+                if (!canChangeAmount) 
+                {
                     setQuantityValue(defaultAmountValue);
                 }
             }, [canChangeAmount]);
+
+            //Listens if the amountValue reached to max
+            useEffect(() =>
+            {
+                setisAmountMaxed(quantityValue >= maxAmountValue);
+            }, [quantityValue]);
+
+            //Make the appearance of the amount slider pressable or not (if it can be stackable or not maxed)(makeAmountPressable) 
+            useEffect(() =>
+            {
+                if(!canChangeAmount) { setMakeAmountPressable(false); return; }
+
+                if (canChangeAmount) 
+                {
+                    if (isAmountMaxed) { setMakeAmountPressable(false); return; }
+                    setMakeAmountPressable(true);
+                }
+            }, [canChangeAmount, isAmountMaxed]);
         //#endregion
 
 
 
 
-
-
+        
         //PRICE CALCULATION
         const [amountTotal, setAmountTotal] = useState(0);
 
@@ -153,7 +183,6 @@ const FooterButton: React.FC<BottomButtonProps> = ({
                 setAmountTotal(quantityValue * price);
             }, [quantityValue, price]);
         //#endregion
-
 
 
 
@@ -180,11 +209,14 @@ const FooterButton: React.FC<BottomButtonProps> = ({
 
             {/* AMOUNT SLIDER SHIT render this if renderAmount is true */}
             {renderAmount && (
-                <div className="flex flex-col items-center justify-between  px-7 mt-4 mb-5">
+                <div className={`flex flex-col items-center justify-between px-7 ${marginAmountPart} mb-5`}>
 
-                    <div>
-                        <p>{errorMessage}</p>
-                    </div>
+                    {displayError &&
+                        (<div className="text-xs -mt-1 pb-1">
+                            <p>{errorMessage}</p>
+                        </div>)
+                    }
+                    
                     
                     <div className="flex items-center justify-between w-full mt-2">
                         <div className="flex items-center gap-2 ">
@@ -209,7 +241,7 @@ const FooterButton: React.FC<BottomButtonProps> = ({
                                 className={`flex h-8 w-8 items-center justify-center rounded-full border border-gray-800 text-white text-lg ${buttonAdd}`}
                                 onClick={addAmountValue}
                             >
-                                {canChangeAmount ? (
+                                {makeAmountPressable ? (
                                     <img
                                         src={Plus_Icon}
                                         alt="Plus"

@@ -73,6 +73,9 @@
 
     //Confirmation Modal
     import Close_Icon from '../assets/Partials/close.svg';
+
+    //Available Credits
+    import Refresh_Icon from '../assets/Partials/Refresh.svg';
 // Partial
 
 
@@ -115,26 +118,18 @@ export
     // Partial
         //Crowd Meter
             Crowd_Icon, MoreHorizontal_Icon,
-        //Crowd Meter
-
         // Bottom Navbar
             Home_Icon, MyProgress_Icon, Store_Icon,
-        // Bottom Navbar
-
         //HeaderNavBar
             BackButton_Icon,
-        //HeaderNavBar
-
         //FooterButton
             Download_Icon, Minus_Icon, Plus_Icon, PlusBlack_Icon,
-        //FooterButton
-
         //QR Code
             QRPlaceholder_Image,
-        //QR Code
         //Confirmation Modal
-            Close_Icon
-        //Confirmation Modal
+            Close_Icon, 
+        //Available Credits
+            Refresh_Icon
     // Partial
 };
 

@@ -10,7 +10,7 @@ export default function TotalCredits({credits_balance}:TotalCredits_Props)
     return (
         <div>
             {/* In-app credits label + big number */}
-            <div className="mt-5 mb-5 flex flex-col items-center">
+            <div className="mt-3 mb-5 flex flex-col items-center">
                 <p className="text-lg font-normal text-gray-500">In app credits</p>
 
                 <div className="-mt-2 flex items-center">

@@ -5,34 +5,39 @@ import { useState } from "react";
 
 import CrowdMeter_Bar from "../Partials/CrowdMeter_Bar";
 
-interface HeaderProps {    
+//DB
+import { useUser } from "../../context/UserContext";
+
+interface HeaderProps 
+{    
     GymCoins: number;     
 }
 
 export default function CrowdMeter({GymCoins}: HeaderProps) 
 {
+    // FOR CHECK IN BUTTON (Unpressable if gymcoin <= 0)
+    const navigate = useNavigate();
     // FOR CROWD BAR
     let Customerlimit = 50;
     let customerCount = 20;
-
-    // 🔹 Variables / States
+    // Variables / States
     const [isCheckedIn, setIsCheckedIn] = useState(false); //Check in or not (for button state)
     const [startTime, setStartTime] = useState("5:00 PM"); //Check in time (For button dertails)
-
-    //FOR CHECK IN BUTTON (Unpressable if gymcoin <= 0)
-    const navigate = useNavigate();
-
-    // 🔹 Handle Check-In Click
-    const handleCheckInClick = (e: React.MouseEvent) => {
-        if (GymCoins <= 0) {
-        e.preventDefault(); // ❌ Stop navigation
-        alert("You need at least 1 GymCoin to check in!");
-        return;
+    // Handle Check-In Click
+    const handleCheckInClick = (e: React.MouseEvent) => 
+    {
+        if (GymCoins <= 0) 
+        {
+            e.preventDefault(); // Stop navigation
+            alert("You need at least 1 GymCoin to check in!");
+            return;
         }
+        navigate("/home/checkIn"); // Navigate manually after validation
+    }
 
-        setIsCheckedIn(!isCheckedIn); // ✅ Toggle check-in state
-        navigate("/home/checkIn"); // ✅ Navigate manually after validation
-    };
+
+    //NEW SIGMA CODE BRO
+    const { profile } = useUser();
 
     return (
         <div className="bg-white rounded-[20px] p-6 pb-6 shadow-md font-montserrat w-[98%] mx-auto">
@@ -70,20 +75,20 @@ export default function CrowdMeter({GymCoins}: HeaderProps)
                     <button
                         onClick={handleCheckInClick}
                         className={`flex items-center justify-center gap-2 rounded-full w-[221px] py-3 text-base font-medium text-white transition-all duration-300 ${
-                        isCheckedIn ? "bg-[#4BB078]" : "bg-red-600"
+                        profile?.checked_in ? "bg-[#28D977]" : "bg-red-600"
                         }`}
                     >
                         <img
-                        src={isCheckedIn ? CheckOut_Icon : CheckIn_Icon}
-                        alt={isCheckedIn ? "Check Out" : "Check In"}
+                        src={profile?.checked_in ? CheckOut_Icon : CheckIn_Icon}
+                        alt={profile?.checked_in ? "Check Out" : "Check In"}
                         className="w-5 h-5"
                         />
-                        {isCheckedIn ? "Check Out" : "Check In"}
+                        {profile?.checked_in ? "Check Out" : "Check In"}
                     </button>
                 </Link>
                 
                 {/* 🔹 Started At Text */}
-                {isCheckedIn && (
+                {profile?.checked_in && (
                     <p className="text-xs text-gray-500 mt-1">
                     Started out at {startTime}
                     </p>
@@ -92,4 +97,4 @@ export default function CrowdMeter({GymCoins}: HeaderProps)
 
         </div>
     );
-    }
+}

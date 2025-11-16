@@ -12,6 +12,7 @@ interface Package
     description?: string | null;
     price?: number | null;
     stackable: boolean;
+    user_package_id?: number | null;
 }
 
 // Props interface
@@ -26,11 +27,19 @@ interface PackageRendererProps
     coinCentered?: boolean;
     // Disable interaction (default: false)
     disableInteraction?: boolean;
+    //onlyInteractIfPackageIsAvailable
+    onlyInteractIfPackageIsAvailable?: boolean;
     // Highlight border black if coins > 0
     highlightPositiveCoins?: boolean;
 }
 
-export default function PackageRenderer({ packages, onSelect, coinCentered=false, disableInteraction=false, highlightPositiveCoins=false, }: PackageRendererProps)
+export default function PackageRenderer({ 
+    packages, 
+    onSelect, 
+    coinCentered=false, 
+    disableInteraction=false, 
+    highlightPositiveCoins=false, 
+    onlyInteractIfPackageIsAvailable=false}: PackageRendererProps)
 {
 
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -59,11 +68,14 @@ export default function PackageRenderer({ packages, onSelect, coinCentered=false
                             key={index}
                             onClick={() => 
                                 {
-                                    if (!disableInteraction) 
-                                    {
-                                        setSelectedIndex(index);
-                                        onSelect?.(pkg);
-                                    }
+                                    //IF DISABLE INTERACTION THEN U CANT CHOOSE IT
+                                    if (disableInteraction) return;
+
+                                    //IF COINS <=0 THEN U CANT CHOOSE IT
+                                    if (onlyInteractIfPackageIsAvailable && pkg.coins <= 0) return;
+
+                                    setSelectedIndex(index);
+                                    onSelect?.(pkg);
                                 }
                             }
                             className={`px-4 py-5 rounded-xl border-[3px] cursor-pointer transition-all duration-200 ${borderClass}`}

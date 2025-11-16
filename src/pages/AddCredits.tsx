@@ -54,7 +54,6 @@ export default function AddCredits()
         }
     };
 
-    // ========================================UPDATE HERE TO MAKE THE AMOUNT CHANGEABLE (HARDCODED YET) ========================================
     // Start scanning for pending purchases
     // Data row insertion and collection of the data inserted
     // Whenever segment1ButtonPressed becomes true → show segment 2 (if segment1Button is pressed)
@@ -88,6 +87,14 @@ export default function AddCredits()
                 const result = await watchPendingPurchase();
                 navigate("/home");
 
+                console.log("result:",result)
+
+                // if (result) 
+                // {
+                //     refreshUserPackages();
+                // }
+                
+
                 // Wait complete → proceed to next segment
                 setTransitionType("slide-left");
                 setShowSegment1(false);
@@ -103,18 +110,20 @@ export default function AddCredits()
             }
         }
     };
-
     // #endregion
 
 
 
     // #region Universal
         const navigate = useNavigate();
-        const { qrDataUrl, packages, user, profile, watchPendingPurchase, stopPurchaseListener } = useUser();
+        const { packages, userPackages, profile, watchPendingPurchase, stopPurchaseListener } = useUser();
 
         // Show segment 1 or 2 (true = 1 else 2)
             const [showSegment1, setShowSegment1] = useState(true);
             const activeSegment = showSegment1 ? 1 : 2;
+
+        // Main container size depending on segment
+        const containerSize = showSegment1 ? "pb-[210px]" : "pb-[40px]";
 
         // If headerback button is pressed
         const [HeaderBackPressed, setHeaderBackPressed] = useState(false);
@@ -132,7 +141,7 @@ export default function AddCredits()
                 {
                     setTransitionType("slide-right");
                     setShowSegment1(true);              // or false, depending on desired flow
-                    setSelectedPackage(null);
+                    setSelectedPackage(null);           //========================================CAN REMEMBER THE PAST (CHOOSEN PACKAGE OR NAHHG)========================================
                     setPendingPurchase(null);
                     setHeaderBackPressed(false);        // reset so it only triggers once
                     setSegment1ButtonPressed(false);
@@ -157,6 +166,8 @@ export default function AddCredits()
 
         // If segment1 button is pressable or not
         const [segment1ButtonPressable, setsegment1ButtonPressable] = useState<boolean>(false);
+        // If package is alreday owned by user
+        const [packageAlreadyOwned, setpackageAlreadyOwned] = useState<boolean>(false);
 
         // Whenever segment1ButtonPressed becomes true → show segment 2
         // and insert datarow if criterias are met
@@ -186,23 +197,43 @@ export default function AddCredits()
 
             doPurchase();
 
-            return () => {
+            return () => 
+            {
                 // prevent state updates if the component unmounts
                 isActive = false;
             };
         }, [segment1ButtonPressed, selectedPackage?.package_id, profile?.id]);
 
-        //Make segment1 button pressable or not (unlesd they have choosen a package)
+        // Make segment1 button pressable or not (or be able to buy the package)
+        // If there is no selected package = false
+        // If it is already owned by the user:
+            //if stakable = true
+            //if not stackable = false
         useEffect(() => 
         {
-            if (selectedPackage?.package_id) 
-            {
-                setsegment1ButtonPressable(true);
-            } 
-            else 
+            //IF THERE IS A SELECTED PACAKAGE, IF NONE THEN RETURN
+            if (!selectedPackage?.package_id) 
             {
                 setsegment1ButtonPressable(false);
+                return;
             }
+
+            //CHECK THE userPackages ARRAY IF IT IS ALREADY OWNED BY THE USER
+            const alreadyOwned = Array.isArray(userPackages) &&
+                userPackages.some(up => up.package_id === selectedPackage.package_id);
+
+
+            // If stackable is true => always allow press
+            if (selectedPackage.stackable) 
+            {
+                setpackageAlreadyOwned(alreadyOwned);
+                setsegment1ButtonPressable(true);
+                return;
+            }
+
+            // If NOT stackable => only enable if not already owned
+            setsegment1ButtonPressable(!alreadyOwned);
+            setpackageAlreadyOwned(alreadyOwned);
         }, [selectedPackage]);
     // #endregion 
 
@@ -233,57 +264,46 @@ export default function AddCredits()
 
     return (
         <div>
-            <div className="min-h-screen bg-white font-montserrat relative pb-[150px]">
+            <div className={`min-h-screen bg-white font-montserrat relative ${containerSize}`}>
                 <HeaderNav title="Add Credits" backRoute="/home" showNavigator segments={2} activeSegment={activeSegment} onBackPressed={setHeaderBackPressed} disableBackNavigation={!showSegment1}/>
 
                 <PageTransition type={transitionType}>
                     {/* Conditional rendering */}
                     {showSegment1 ? 
                     (
-                        <Segment1 packages={packages} selectedPackage={selectedPackage} setSelectedPackage={setSelectedPackage} setButtonPressed={setSegment1ButtonPressed} buttonPressable={segment1ButtonPressable}
-                            setamountTotal={setamountTotal} setquantityTotal={setquantityTotal}/>
+                        <Segment1 packages={packages} userPackages={userPackages}
+                            selectedPackage={selectedPackage} setSelectedPackage={setSelectedPackage} setButtonPressed={setSegment1ButtonPressed} buttonPressable={segment1ButtonPressable}
+                            setamountTotal={setamountTotal} setquantityTotal={setquantityTotal}
+                            packageAlreadyOwned={packageAlreadyOwned}/>
                     ) : (
                         <Segment2 pendingPurchase={pendingPurchase} headerBackPressed={HeaderBackPressed} onResetHeaderBackPressed={setHeaderBackPressed} buttonPressed_Modal={setcloseModalPressed}/>
                     )}
                 </PageTransition>
 
-
-
-
-
-
-
-
-
-
-
-
-                {/* DEBUG */}
-                    <div className="-mt-20 pb-[200px]">
-                        <p>
-                            Segment: {showSegment1 ? "Segment1" : "Segment2" } 
-                        </p>
-
-                        <p>
-                            segment1ButtonPressed: {segment1ButtonPressed ? "true" : "false" } 
-                        </p>
-
-                        <p>
-                            {selectedPackage?.package_id ? selectedPackage?.package_id : "none"}
-                        </p>
-                        <p>
-                            HeaderBackPressed: {HeaderBackPressed? "true": "false"}
-                        </p>
-                        <p>
-                            closeModalPressed: {closeModalPressed? "true" : "false"}
-                        </p>
-                    </div>
-                {/* DEBUG */}
-
-
-
             </div>
         </div>
-        
     );
 }
+
+
+{/* DEBUG */}
+{/* <div className="-mt-20 pb-[200px]">
+    <p>
+        Segment: {showSegment1 ? "Segment1" : "Segment2" } 
+    </p>
+
+    <p>
+        segment1ButtonPressed: {segment1ButtonPressed ? "true" : "false" } 
+    </p>
+
+    <p>
+        {selectedPackage?.package_id ? selectedPackage?.package_id : "none"}
+    </p>
+    <p>
+        HeaderBackPressed: {HeaderBackPressed? "true": "false"}
+    </p>
+    <p>
+        closeModalPressed: {closeModalPressed? "true" : "false"}
+    </p>
+</div> */}
+{/* DEBUG */}

@@ -144,24 +144,7 @@ export default function MainDisplay_AddCredits({ pendingPurchase, headerBackPres
             
             {/* Scroll To Top */}
             <ScrollToTop />
-
             <div className="pb-20 px-10 flex flex-col justify-center items-center font-montserrat pt-[130px]">
-                {/* DEBUG */}
-                <p>
-                    modalCloseButtonClicked: {modalCloseButtonClicked? "true": "false"} 
-                </p>
-                <p>
-                    modalAgreeButtonClicked: {modalAgreeButtonClicked? "true": "false"}
-                </p>
-                <p>
-                    pendingPurchase_id: {pendingPurchase.id}
-                </p>
-                <p>
-                    pendingPurchase?.id: {pendingPurchase?.id ? pendingPurchase?.id : "null"}
-                </p>
-
-
-
                 {/* User Name */}
                 <h1 className="text-3xl font-semibold mb-6 text-center">
                     {profile?.full_name ?? "Error: No profile detected"}
@@ -174,11 +157,10 @@ export default function MainDisplay_AddCredits({ pendingPurchase, headerBackPres
                         <img src={qrDataUrl} alt="QR Code" className="w-full h-full object-cover" />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-[#E6E6E6] text-black font-semibold">
-                            Error: idk bro
+                            Error: no user found (try relog-in) goofy ahh code
                         </div>
                     )}
                 </div>
-
 
                 {/* Label */}
                 <h3 className="pb-3 text-3xl font-semibold text-center">Credits Top-up</h3>
@@ -190,7 +172,6 @@ export default function MainDisplay_AddCredits({ pendingPurchase, headerBackPres
                     <span className="font-semibold"> ₱{pendingPurchase.amount_paid}</span> and let our staff
                     scan this QR to complete your transaction.
                 </p>
-
 
                 <p className="text-[#434343] mb-1 mt-5 text-center px-6">
                     In app credits:
@@ -222,3 +203,18 @@ export default function MainDisplay_AddCredits({ pendingPurchase, headerBackPres
         </div>
     );
 }
+
+
+{/* DEBUG */}
+{/* <p>
+    modalCloseButtonClicked: {modalCloseButtonClicked? "true": "false"} 
+</p>
+<p>
+    modalAgreeButtonClicked: {modalAgreeButtonClicked? "true": "false"}
+</p>
+<p>
+    pendingPurchase_id: {pendingPurchase.id}
+</p>
+<p>
+    pendingPurchase?.id: {pendingPurchase?.id ? pendingPurchase?.id : "null"}
+</p> */}

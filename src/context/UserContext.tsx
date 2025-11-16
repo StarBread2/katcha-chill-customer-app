@@ -14,16 +14,20 @@ import { getPendingPurchaseByUser } from "../services/purchaseService";
 import { startPurchaseListener } from "../services/supabaseRealtimeServices";
 import { getUserPackages } from "../services/userPackageService";
 
-type UserProfile = {
+type UserProfile = 
+{
     id?: string;
-    full_name: string;
+    avatar_url?: string | null;
     role: string;
+    checked_in: boolean;
+    full_name: string;
     credits_balance: number;
     created_at: string;
-    avatar_url?: string | null;
+    updated_at: string;
 };
 
-type UserContextType = {
+type UserContextType = 
+{
     user: any | null;
     profile: UserProfile | null;
     loading: boolean;
@@ -34,7 +38,7 @@ type UserContextType = {
     refreshPackages: () => Promise<void>;
 
     //manually start scanning for credit_purchases
-    watchPendingPurchase: () => Promise<void>;
+    watchPendingPurchase: () => Promise<any | null>;
 
     //manually stop scanning for credit_purchases
     stopPurchaseListener: () => void;
@@ -95,14 +99,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             try 
             {
                 const data = await getUserProfile(user.id);
+
                 const formattedProfile: UserProfile = 
                 {
                     id: user.id,
-                    full_name: data.full_name,
+                    avatar_url: user.user_metadata.avatar_url,
                     role: data.role,
+                    checked_in: data.checked_in,
+                    full_name: data.full_name,
                     credits_balance: data.credits_balance,
                     created_at: data.created_at,
-                    avatar_url: user.user_metadata.avatar_url,
+                    updated_at: data.updated_at,
                 };
 
                 setProfile(formattedProfile);
@@ -211,22 +218,24 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const [purchaseListener, setPurchaseListener] = useState<any>(null);
 
         // Start watching for pending purchases
-        const watchPendingPurchase = async () => {
-        console.log("🟢 scanning for pending Purchases (watchPendingPurchase)");
+        const watchPendingPurchase = async () => 
+        {
+            console.log("🟢 scanning for pending Purchases (watchPendingPurchase)");
 
-        if (!user?.id) return;
+            if (!user?.id) return;
 
-        const pending = await getPendingPurchaseByUser(user.id);
-        if (!pending) {
-            console.log("No pending purchase found.");
-            return null;
-        }
+            //CHECK IF USER HAS PENDING ORDERS
+            const pending = await getPendingPurchaseByUser(user.id);
+            if (!pending) {
+                console.log("No pending purchase found.");
+                return null;
+            }
 
-        console.log("There is a pending order (watchPendingPurchase)");
+            console.log("There is a pending order (watchPendingPurchase)");
 
-        // ✅ Wait for the purchase listener to complete
-        const result = await startPurchaseListener(user.id, fetchProfile);
-        return result; // return the updated purchase
+            // Wait for the purchase listener to complete
+            const result = await startPurchaseListener(user.id, fetchProfile);
+            return result; // return the updated purchase
         };
 
 

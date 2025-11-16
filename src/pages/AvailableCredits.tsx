@@ -1,62 +1,24 @@
-import { useEffect } from "react";  
 import { useUser } from "../context/UserContext";
 
+//PARTIALS
 import HeaderNav from "../components/Partials/HeaderNav";
 import PackageRenderer from "../components/Partials/PackageRenderer";
 import FooterButton from "../components/Partials/FooterButton";
 
+//MAINS
 import TotalCredits from "../components/Available Credits/TotalCreditBalance";
+
+//UTILS
+import mergeUserPackages from "../utils/mergeUserPackages";
+
+//ICONS
+import { Refresh_Icon } from "../assets/index";
+
 
 export default function AvailableCredits() 
 {
     // ACCESING QUERY DATA
     const {profile, userPackages, packages} = useUser();
-
-    // #region JSON PACKAGE MAKER FOR DISPLAY
-        const mergeUserPackages = () =>
-        {
-            if (!userPackages || !packages) return [];
-
-            // lookup map of package_id → package data
-            const userPackageMap = Object.fromEntries(
-                (userPackages || []).map(up => [up.package_id, up])
-            );
-
-            // Merge every package (from master list) with matching user data (if any)
-            return packages.map(pkg => 
-            {
-                const up = userPackageMap[pkg.package_id];
-
-                // Format expiration safely
-                const expiration = up?.expiration_date
-                    ? new Date(up.expiration_date).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                    })
-                    : "None";
-
-                // Format purchase date safely
-                const purchasedAt = up?.purchased_at
-                    ? new Date(up.purchased_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                    })
-                    : "None";
-
-                // Merge data
-                return {
-                    package_id: pkg.package_id,
-                    name: pkg.name ?? "Unknown Package",
-                    coins: up ? up.credits_remaining : 0,  // default to 0 if not owned
-                    expiration,
-                    purchasedAt,
-                    stackable: pkg.stackable ?? false,
-                };
-            });
-        }
-    // #endregion
 
     const debug = () =>
     {
@@ -65,11 +27,21 @@ export default function AvailableCredits()
         console.log("mergeUserPackages: ",mergeUserPackages())
     }
 
+    // debug();
+
     return (
         <div className="pb-[150px] bg-white px-4">
             <HeaderNav title="Credit Packages" backRoute="/home"/>
 
             <div className="pt-[100px] font-montserrat">
+
+                {/* Loading bar unused */}
+                {/* <div className="flex justify-end px-2">
+                    <div className="w-9 h-9 rounded-full border-[1px] border-[#757575] flex items-center justify-center"
+                        onClick={refreshUserPackages}>
+                        <img src={Refresh_Icon} className="w-[18px] h-[18px] active:rotate-180 transition-transform duration-300" alt="Refresh" />
+                    </div>
+                </div> */}
 
                 <TotalCredits credits_balance={profile?.credits_balance}/>
                 

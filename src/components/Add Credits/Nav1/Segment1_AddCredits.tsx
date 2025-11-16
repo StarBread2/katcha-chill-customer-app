@@ -16,11 +16,23 @@ interface Package
     price?: number | null;
     stackable: boolean;
 }
-
+// FOR USER PACKAGES
+type UserPackage = 
+{
+    user_package_id: number;
+    user_id: string;
+    package_id: string;
+    expiration_date: string;
+    credits_remaining: number;
+    status: "active" | "expired" | "used_up";
+    purchased_at: string;
+    transaction_id: number;
+};
 // Props interface
 interface AddCredits_Main1Props 
 {
     packages: Package[];
+    userPackages: UserPackage[];
 
     //Selected Package
     selectedPackage?: Package | null;
@@ -34,10 +46,42 @@ interface AddCredits_Main1Props
 
     setquantityTotal: (value: number) => void;
     setamountTotal: (value: number) => void;
+
+    // If package is already owned by the user l197
+    packageAlreadyOwned: boolean;
 }
 
-export default function AddCredits_Segment1({ packages, selectedPackage, setSelectedPackage, setButtonPressed: buttonPressed, buttonPressable, setquantityTotal, setamountTotal }: AddCredits_Main1Props) 
+export default function AddCredits_Segment1({ packages, selectedPackage, setSelectedPackage, setButtonPressed: buttonPressed, buttonPressable, setquantityTotal, setamountTotal, packageAlreadyOwned }: AddCredits_Main1Props) 
 {
+    //#region FOR FOOTER ERROR DISPLAY
+        function getError(stackable: boolean | undefined) 
+        {
+            if (packageAlreadyOwned)
+            {
+                if (stackable === false)
+                {
+                    return{
+                        showError: true,
+                        message: "You still have an active package similar to this"
+                    };
+                }
+            }
+            else if (stackable === false) 
+            {
+                return {
+                    showError: true,
+                    message: "This package can't be stacked"
+                };
+            }
+
+            return {
+                showError: false,
+                message: ""
+            };
+        }
+        const { showError, message } = getError(selectedPackage?.stackable);
+    //#endregion
+
     return (
         <div>
             {/* Scroll To Top */}
@@ -57,7 +101,8 @@ export default function AddCredits_Segment1({ packages, selectedPackage, setSele
             <FooterButton label="Next" 
                 onReturnBool={buttonPressed} canPress={buttonPressable} 
                 renderAmount={true} canChangeQuantity={selectedPackage?.stackable || false} defaultQuantityValue={1} maxQuantityValue={10} price={selectedPackage?.price || 0} 
-                setamountTotal={setamountTotal} setquantityTotal={setquantityTotal}/>
+                setamountTotal={setamountTotal} setquantityTotal={setquantityTotal} 
+                displayError={showError} errorMessage={message}/>
         </div>
     );
 }

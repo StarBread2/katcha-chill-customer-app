@@ -366,3 +366,156 @@ BEGIN
   WHERE id = NEW.user_id;
 
 END;
+
+
+
+DECLARE
+  pkg RECORD;
+  existing_up RECORD;
+  expiry TIMESTAMPTZ;
+  credits_to_add integer;
+  new_credits bigint;
+  total_credits bigint;
+BEGIN
+  -- Only trigger when purchase changes to 'paid'
+  IF NEW.purchase_state = 'paid' AND OLD.purchase_state IS DISTINCT FROM 'paid' THEN
+    -- Fetch the package details
+    SELECT * INTO pkg FROM credit_packages WHERE package_id = NEW.package_id;
+
+    -- Check if package exists
+    IF NOT FOUND THEN
+      RAISE WARNING '⚠️ No credit package found for package_id: %', NEW.package_id;
+      RETURN NEW;
+    END IF;
+
+    -- DO THE CALCULATIONS
+    -- Determine credits to add from this purchase: package.credit_count * package_amount
+    credits_to_add := COALESCE(pkg.credit_count, 0) * COALESCE(NEW.package_amount, 0);
+
+    -- Compute expiration date safely
+    IF pkg.expiration_days IS NOT NULL THEN
+      expiry := now() + (pkg.expiration_days || ' days')::INTERVAL;
+    ELSE
+      expiry := NULL;
+    END IF;
+
+    -- Look for an existing active user_packages row for this user + package
+    SELECT *
+    INTO existing_up
+    FROM user_packages
+    WHERE user_id = NEW.user_id
+      AND package_id = NEW.package_id
+      AND status = 'active'
+    LIMIT 1;
+    -- DO THE CALCULATIONS
+
+
+    -- If an active package already exists:
+    IF FOUND THEN
+      -- If package is NOT stackable, disallow repeated order
+      IF pkg.stackable = FALSE THEN
+        RAISE EXCEPTION 'Package % is not stackable: cannot purchase the same package again while an active package exists for this user.', NEW.package_id;
+      END IF;
+
+      -- pkg.stackable = true: add credits and update purchased_at, expiration_date, transaction_id
+      -- Compute new credits (use bigint to avoid smallint overflow temporarily)
+      new_credits := COALESCE(existing_up.credits_remaining, 0)::bigint + credits_to_add::bigint;
+
+      UPDATE user_packages
+      SET
+        credits_remaining = new_credits::smallint,
+        purchased_at      = now(),
+        expiration_date   = expiry,
+        transaction_id    = NEW.id
+      WHERE user_package_id = existing_up.user_package_id;
+
+
+    ELSE
+      -- Insert into user_packages, include transaction_id
+      INSERT INTO user_packages (
+        user_id,
+        package_id,
+        expiration_date,
+        credits_remaining,
+        status,
+        purchased_at,
+        transaction_id
+      ) VALUES (
+        NEW.user_id,
+        NEW.package_id,
+        expiry,
+        LEAST(COALESCE(pkg.credit_count, 0) * COALESCE(NEW.package_amount, 0), 32767)::smallint,
+        'active',
+        now(),
+        NEW.id -- link to credit_purchases.id
+      );
+    END IF;
+    
+    -- Recalculate user's total credits
+    SELECT COALESCE(SUM(credits_remaining), 0)
+    INTO total_credits
+    FROM user_packages
+    WHERE user_id = NEW.user_id
+      AND status = 'active';  -- optional filter, if you only count active ones
+
+    -- Update user's balance
+    UPDATE profiles
+    SET credits_balance = total_credits
+    WHERE id = NEW.user_id;
+
+
+  END IF;
+
+  RETURN NEW;
+END;
+
+
+
+name: credit_purchases
+id (bigint)
+user_id (uuid)
+package_amount (smallint)
+amount_paid (integer)
+payment_method (	gcash, cash)
+created_at (timestamptz)
+purchase_state (	pending, paid)
+package_id (bigint)
+
+name: user_packages
+user_package_id (bigint)
+user_id (uuid)
+expiration_date (timestamptz)
+credits_remaining (smallint)
+status (	active, expired, used_up)
+purchased_at (timestamptz)
+transaction_id (bigint)
+package_id (bigint)
+
+
+table name: attendance 
+attendance_id (bigint) 
+user_id (uuid) 
+user_package_id (bigint) 
+check_in (timestamptz) 
+check_out (timestamptz) 
+checkin_approved (bool)
+
+
+table name: profiles 
+id (uuid)
+full_name (text)
+role (text)
+credits_balance (integer)
+created_at (timestamptz)
+updated_at (timestamptz)
+checked_in (bool)
+
+
+
+so i have this these tb: table name: attendance attendance_id (bigint) user_id (uuid) user_package_id (bigint) check_in (timestamptz) check_out (timestamptz) checkIn_Approved (bool) name: user_packages user_package_id (bigint) user_id (uuid) expiration_date (timestamptz) credits_remaining (smallint) status ( active, expired, used_up) purchased_at (timestamptz) transaction_id (bigint) package_id (bigint) i want a trigger when checkIn_Approved become true then: check for this: if attendance.user_package_id.status = active attendance.user_package_id.credits_remaining > 1 if these are not true then u cannot make checkIn_Approved = true then: separate trigger: if checkIn_Approved = true then: attendance.check_in (current time) attendance.user_id.checked_in = true attendance.user_package_id.credits_remaining - 1 then another separate trigger: if checkIn_Approved comes from true then changed to false then: attendance.check_in = null attendance.user_id.checked_in = true attendance.user_package_id.credits_remaining + 1
+
+
+https://chatgpt.com/c/69181a8d-2980-8322-a970-8d78035f635f
+
+//PAPA ACCOUNT 
+
