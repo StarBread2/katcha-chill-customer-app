@@ -14,7 +14,18 @@
     padding: 0 !important;
 }
 
-.slick-dots li.slick-active div 
-{
-    @apply bg-black scale-110;
+@import "swiper/css";
+@import "swiper/css/pagination";
+
+.swiper-pagination-bullet {
+    width: 10px;   /* change this */
+    height: 10px;  /* change this */
+    margin: 0 2px !important;
+    background: #E76F6F;
+    opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+    background: #DE2B2D;
+    opacity: 1;
 }

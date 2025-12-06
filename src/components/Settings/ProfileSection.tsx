@@ -28,6 +28,7 @@ export default function ProfileSection_Settings({ userName, memberSince, user_av
                         <img
                         src={user_avatar}
                         alt="User Avatar"
+                        referrerPolicy="no-referrer"
                         className="w-14 h-14 rounded-full object-cover border-[1px] border-black"
                         />
                     ) : (

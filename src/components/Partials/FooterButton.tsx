@@ -5,10 +5,12 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 
 import { Minus_Icon, Plus_Icon, PlusBlack_Icon, } from "../../assets/index.ts";
+import { div } from "framer-motion/client";
 
 
 interface BottomButtonProps {
     icon?: string | null;
+    //NAME OF THE FOOTER SHIT
     label: string;
     onClick?: () => void;
     bgColor?: string;
@@ -29,12 +31,19 @@ interface BottomButtonProps {
 
     /** Renders the amount slider  */
     renderAmount?: boolean;
-    // Can change the amount
+    //** Display the slider or the text "Total" */
+    displayAmount?: boolean;
+    //** Can change the amount */ 
     canChangeQuantity?: boolean;
     //default amount value
     defaultQuantityValue?: number; 
-    //max amount value
-    maxQuantityValue?: number;
+        //SKIP TO THIS NUMBER (CURRENT COUNT)
+        currentValueQuantity?: number;
+        enableCurrentAmountPreCalculated?: boolean;
+        //USE THIS AMOUNT (CALCULATE OUTSIDE)
+        currentAmountPreCalculated?: number;
+        //max amount value
+        maxQuantityValue?: number;
     // THE PASSED PRICE (WHAT THE SHIT WILL REFERENCE)
     price?: number;
     
@@ -61,8 +70,12 @@ const FooterButton: React.FC<BottomButtonProps> = ({
     canPress = true,
 
     renderAmount = false,
+    displayAmount = true,
     canChangeQuantity: canChangeAmount = false,
     defaultQuantityValue: defaultAmountValue = 0,
+    currentValueQuantity = defaultAmountValue,
+    enableCurrentAmountPreCalculated = false,
+    currentAmountPreCalculated = 0,
     maxQuantityValue: maxAmountValue = 0,
     setquantityTotal,
     setamountTotal,
@@ -122,7 +135,7 @@ const FooterButton: React.FC<BottomButtonProps> = ({
             const amountNumColor = makeAmountPressable ?  "text-black" : "text-gray-500";
 
             //FOR AMOUNT VALUE CALCULATION
-            const [quantityValue, setQuantityValue] = useState(defaultAmountValue);
+            const [quantityValue, setQuantityValue] = useState(currentValueQuantity);
 
         //#region functions and usestate
             const addAmountValue = () =>
@@ -160,6 +173,7 @@ const FooterButton: React.FC<BottomButtonProps> = ({
             //Make the appearance of the amount slider pressable or not (if it can be stackable or not maxed)(makeAmountPressable) 
             useEffect(() =>
             {
+                
                 if(!canChangeAmount) { setMakeAmountPressable(false); return; }
 
                 if (canChangeAmount) 
@@ -167,21 +181,32 @@ const FooterButton: React.FC<BottomButtonProps> = ({
                     if (isAmountMaxed) { setMakeAmountPressable(false); return; }
                     setMakeAmountPressable(true);
                 }
+
             }, [canChangeAmount, isAmountMaxed]);
         //#endregion
 
 
-
+        
 
         
         //PRICE CALCULATION
-        const [amountTotal, setAmountTotal] = useState(0);
-
-        //#region functions and usestate
+        const [amountTotal, setAmountTotal] = useState(currentAmountPreCalculated);
+        //#region CALCULATE THE PRICE INTERNALLY (SKIP THIS IF enableCurrentAmountPreCalculated)
             useEffect(() => 
             {
+                if(enableCurrentAmountPreCalculated) return;
+
                 setAmountTotal(quantityValue * price);
             }, [quantityValue, price]);
+
+            // Watch for changes from parent (cartGrandTotal) (USE THIS INSTEAD IF enableCurrentAmountPreCalculated enabled)
+            useEffect(() => 
+            {
+                if (enableCurrentAmountPreCalculated) 
+                {
+                    setAmountTotal(currentAmountPreCalculated ?? 0);
+                }
+            }, [enableCurrentAmountPreCalculated, currentAmountPreCalculated]);
         //#endregion
 
 
@@ -205,7 +230,7 @@ const FooterButton: React.FC<BottomButtonProps> = ({
 
     return createPortal(
         <div
-            className={`w-[100%] fixed bottom-0 bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.1)] font-montserrat ${containerHeight}`}>
+            className={`w-[100%] z-50 fixed bottom-0 bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.1)] font-montserrat ${containerHeight}`}>
 
             {/* AMOUNT SLIDER SHIT render this if renderAmount is true */}
             {renderAmount && (
@@ -219,45 +244,48 @@ const FooterButton: React.FC<BottomButtonProps> = ({
                     
                     
                     <div className="flex items-center justify-between w-full mt-2">
-                        <div className="flex items-center gap-2 ">
-                            <button
-                                aria-label="Increase quantity"
-                                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-800 bg-white text-white text-lg"
-                                onClick={subtractAmountValue}
-                            >
-                                <img
-                                    src={Minus_Icon}
-                                    alt="Subtract"
-                                    className="w-4 h-4"
-                                />
-                            </button>
-
-                            <div className={`min-w-[28px] text-center text-lg font-medium ${amountNumColor}`}>
-                                {quantityValue}
-                            </div>
-
-                            <button
-                                aria-label="Increase quantity"
-                                className={`flex h-8 w-8 items-center justify-center rounded-full border border-gray-800 text-white text-lg ${buttonAdd}`}
-                                onClick={addAmountValue}
-                            >
-                                {makeAmountPressable ? (
-                                    <img
-                                        src={Plus_Icon}
-                                        alt="Plus"
-                                        className="w-4 h-4"
-                                    />
-                                ): (
-                                    
-                                    <img
-                                        src={PlusBlack_Icon}
-                                        alt="Plus"
-                                        className="w-4 h-4"
-                                    />
-                                )}
-                                
-                            </button>
-                        </div>
+                            {displayAmount ? (
+                                <div className="flex items-center gap-2 ">
+                                    <button
+                                        aria-label="Increase quantity"
+                                        className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-800 bg-white text-white text-lg"
+                                        onClick={subtractAmountValue}
+                                    >
+                                        <img
+                                            src={Minus_Icon}
+                                            alt="Subtract"
+                                            className="w-4 h-4"
+                                        />
+                                    </button>
+                                    <div className={`min-w-[28px] text-center text-lg font-medium ${amountNumColor}`}>
+                                        {quantityValue}
+                                    </div>
+                                    <button
+                                        aria-label="Increase quantity"
+                                        className={`flex h-8 w-8 items-center justify-center rounded-full border border-gray-800 text-white text-lg ${buttonAdd}`}
+                                        onClick={addAmountValue}
+                                    >
+                                        {makeAmountPressable ? (
+                                            <img
+                                                src={Plus_Icon}
+                                                alt="Plus"
+                                                className="w-4 h-4"
+                                            />
+                                        ): (
+                                            
+                                            <img
+                                                src={PlusBlack_Icon}
+                                                alt="Plus"
+                                                className="w-4 h-4"
+                                            />
+                                        )}
+                                    </button>
+                                </div>
+                            ):(
+                                <div>
+                                    <p className="text-[#434343] text-lg font-semibold">Total</p>
+                                </div>
+                            )}
                         
                         <div className="text-right text-xl font-semibold text-[#434343]">
                             ₱ {amountTotal} 

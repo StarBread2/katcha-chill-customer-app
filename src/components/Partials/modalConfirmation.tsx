@@ -1,7 +1,9 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { Close_Icon } from "../../assets/index.ts";
 
+//CSS TRANSITION
 import PageTransition from "../../components/Transitions/PageTransition.tsx";
 
 interface ModalConfirmationProps 
@@ -12,10 +14,15 @@ interface ModalConfirmationProps
 
     onClose?: (value: boolean) => void;   // called when the close button is pressed
     onConfirm?: (value: boolean) => void; // called when the main (confirm) button is pressed
+
+    //Navigate to where
+    navigateTo?: string;
 }
 
-export default function ModalConfirmation({ title, message, buttonLabel, onClose, onConfirm, }: ModalConfirmationProps) 
+export default function ModalConfirmation({ title, message, buttonLabel, onClose, onConfirm, navigateTo, }: ModalConfirmationProps) 
 {
+    const navigate = useNavigate();
+
     useEffect(() => 
     {
         // Disable scroll when modal opens
@@ -30,10 +37,10 @@ export default function ModalConfirmation({ title, message, buttonLabel, onClose
 
     return createPortal(
         <div 
-            className="font-montserrat fixed bottom-0 left-0 w-full h-full flex justify-center items-end bg-gradient-to-b from-transparent to-black/40 backdrop-blur-sm p-6"
+            className="z-50 font-montserrat fixed bottom-0 left-0 w-full h-full flex justify-center items-end bg-gradient-to-b from-transparent to-black/40 backdrop-blur-sm p-6"
             onClick={() => onClose?.(true)} // Clicking outside closes modal
         >
-            <PageTransition type="slide-up"> {/* ✅ animation wrapper */}
+            <PageTransition type="slide-up"> {/* animation wrapper */}
                 <div 
                     className="bg-white rounded-[30px] shadow-2xl px-10 pt-10 pb-8  w-[100%] max-w-sm text-center relative"
                     onClick={(e) => e.stopPropagation()}
@@ -61,7 +68,13 @@ export default function ModalConfirmation({ title, message, buttonLabel, onClose
 
                     {/* Button */}
                     <button 
-                        onClick={() => onConfirm?.(true)}
+                        onClick={() => {
+                            if (navigateTo) 
+                            {
+                                navigate(navigateTo);
+                            }
+                            onConfirm?.(true);
+                        }}
                         className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 rounded-lg transition-all mt-6">
                         {buttonLabel} 
                     </button>

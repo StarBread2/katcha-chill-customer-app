@@ -49,6 +49,23 @@
 
 
 
+
+
+// Store
+    import Search_Icon from '../assets/Store/Search.svg';
+    import ShoppingCart_Icon from '../assets/Store/ShoppingCart.svg';
+    import ShoppingCart_Black_Icon from '../assets/Store/ShoppingCart_Black.svg';
+    import ShoppingCart_Gray_Icon from '../assets/Store/ShoppingCart_Gray.svg';
+    import Orders_Icon from '../assets/Store/Orders.svg';
+    // Cart
+        import Check_White_Icon from '../assets/Cart/Check.png';
+    // Cart
+// Store
+
+
+
+
+
 // Partial
     //Crowd Meter
     import Crowd_Icon from '../assets/Home/Crowd.svg';
@@ -113,7 +130,15 @@ export
     // My Progress
 
 
+    // Store
+        Search_Icon, ShoppingCart_Icon, ShoppingCart_Black_Icon, ShoppingCart_Gray_Icon,
+        // Cart 
+            Check_White_Icon, Orders_Icon,
+        // Cart 
+    // Store
 
+
+    
 
     // Partial
         //Crowd Meter

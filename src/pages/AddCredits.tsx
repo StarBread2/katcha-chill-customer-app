@@ -179,12 +179,13 @@ export default function AddCredits()
 
             let isActive = true;
 
-            const doPurchase = async () => {
+            const doPurchase = async () => 
+            {
                 try 
                 {
                     await handlePurchase();
                 } 
-                    catch (err) 
+                catch (err) 
                 {
                     console.error(err);
                 } 
@@ -244,7 +245,7 @@ export default function AddCredits()
         //If there is pendingPurchase then go directly to segment 2 and use it as the data to be displayed
         useEffect(() => 
         {
-            console.log("Useeffect checkPendingPurchase()")
+            // console.log("Useeffect checkPendingPurchase()")
             if (!profile?.id) return;
 
             // run only once

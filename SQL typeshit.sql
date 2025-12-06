@@ -501,6 +501,7 @@ check_out (timestamptz)
 checkin_approved (bool)
 
 
+
 table name: profiles 
 id (uuid)
 full_name (text)
@@ -509,6 +510,85 @@ credits_balance (integer)
 created_at (timestamptz)
 updated_at (timestamptz)
 checked_in (bool)
+
+table name: store_items
+id (uuid) primary key
+name (text)
+description (text)
+price (numeric)
+stock (integer)
+created_at (timestamptz)
+featured (bool)
+image_url (text)
+
+
+table name: user_cart
+user_id (uuid) primary key user_id -> public.profiles.id (reference)
+name (text) 
+price (numeric)
+image (text)
+quantity (integer)
+created_at (timestamptz)
+updated_at (timestamptz)
+product_id (uuid) primary key
+
+
+    table name: user_cart
+    cart_id (uuid)
+    user_id (uuid) (relation) user_id->public.profiles.id
+    product_id (uuid) (relation) product_id->public.store_items.id
+    quantity (integer)
+    created_at (timestampz)
+
+
+
+
+
+table name: order_items
+id (uuid) primary key
+order_id (uuid) order_id -> public.order_groups.id (reference)
+item_id (uuid) item_id -> public.store_items.id (reference)
+quantity (integer)
+unit_price (numeric)
+total (numeric)
+
+    table name: order_items
+    id (uuid) primary key
+    order_id (uuid) (relation) order_id -> public.order_groups.id 
+    item_id (uuid) (relation) item_id -> public.store_items.id
+    quantity (integer)
+    unit_price (numeric)
+    total (numeric)
+
+
+
+
+
+table name: order_groups
+id (uuid) primary key
+user_id (uuid) user_id -> public.profiles.id (reference)
+total_amount (numeric)
+created_at (timestamptz)
+updated_at (timestamptz)
+status (text)
+
+    table name: order_groups
+    id (uuid) primary key
+    user_id (uuid) user_id -> public.profiles.id
+    total_amount (numeric)
+    created_at (timestamptz)
+    updated_at (timestamptz)
+    status (Pending, Completed, Out of Stock)
+
+
+
+
+GRANT EXECUTE ON FUNCTION public.ORDER_ITEMS_ORDER_GROUPS_CheckoutOrder(uuid) TO authenticated;
+
+
+
+
+
 
 
 
@@ -519,3 +599,143 @@ https://chatgpt.com/c/69181a8d-2980-8322-a970-8d78035f635f
 
 //PAPA ACCOUNT 
 
+
+
+DECLARE
+    cart_row RECORD;
+    new_order_group_id uuid;
+    total_amount numeric := 0;
+BEGIN
+    -- 1️⃣ Ensure user_cart is not empty
+    IF NOT EXISTS (
+        SELECT 1 FROM user_cart WHERE user_id = user_id
+    ) THEN
+        RAISE EXCEPTION 'User cart is empty.';
+    END IF;
+
+    -- Compute total
+    FOR cart_row IN
+        SELECT uc.cart_id, uc.quantity, si.id AS product_id, si.price
+        FROM user_cart uc
+        JOIN store_items si ON si.id = uc.product_id
+        WHERE uc.user_id = user_id
+    LOOP
+        total_amount := total_amount + (cart_row.price * cart_row.quantity);
+    END LOOP;
+
+    -- Create order_items
+    FOR cart_row IN
+        SELECT uc.cart_id, uc.quantity, si.id AS product_id, si.price
+        FROM user_cart uc
+        JOIN store_items si ON si.id = uc.product_id
+        WHERE uc.user_id = user_id
+    LOOP
+        INSERT INTO order_items (order_id, item_id, quantity, unit_price, total)
+        VALUES (new_order_group_id, cart_row.product_id, cart_row.quantity, cart_row.price, cart_row.price * cart_row.quantity);
+    END LOOP;
+
+    -- Clear cart
+    DELETE FROM user_cart WHERE user_id = user_id;
+
+    -- 6️⃣ Return final order summary as JSON
+    RETURN json_build_object(
+        'order_group_id', new_order_group_id,
+        'total_amount', total_amount,
+        'status', 'pending'
+    );
+END;
+
+
+
+DECLARE
+    cart_row RECORD;
+    new_order_group_id uuid;
+    total_amount numeric := 0;
+BEGIN
+    -- Ensure cart is not empty
+    IF NOT EXISTS (
+        SELECT 1 FROM user_cart WHERE user_id = p_user_id
+    ) THEN
+        RAISE EXCEPTION 'User cart is empty.';
+    END IF;
+
+    -- Compute total
+    FOR cart_row IN
+        SELECT uc.cart_id, uc.quantity, si.id AS product_id, si.price
+        FROM user_cart uc
+        JOIN store_items si ON si.id = uc.product_id
+        WHERE uc.user_id = p_user_id
+    LOOP
+        total_amount := total_amount + (cart_row.price * cart_row.quantity);
+    END LOOP;
+
+    -- Create order group
+    INSERT INTO order_groups (user_id, total_amount, status)
+    VALUES (p_user_id, total_amount, 'pending')
+    RETURNING id INTO new_order_group_id;
+
+    -- Create order_items
+    FOR cart_row IN
+        SELECT uc.cart_id, uc.quantity, si.id AS product_id, si.price
+        FROM user_cart uc
+        JOIN store_items si ON si.id = uc.product_id
+        WHERE uc.user_id = p_user_id
+    LOOP
+        INSERT INTO order_items (order_id, item_id, quantity, unit_price)
+        VALUES (new_order_group_id, cart_row.product_id, cart_row.quantity, cart_row.price);
+    END LOOP;
+
+    -- Clear cart
+    DELETE FROM user_cart WHERE user_id = p_user_id;
+
+    -- Return summary
+    RETURN json_build_object(
+        'order_group_id', new_order_group_id,
+        'total_amount', total_amount,
+        'status', 'pending'
+    );
+END;
+
+
+
+declare
+    result jsonb;
+begin
+    select jsonb_agg(order_group_data) into result
+    from (
+        select 
+            og.id,
+            og.user_id,
+            og.total_amount,
+            og.created_at,
+            og.updated_at,
+            og.status,
+
+            -- Nested order_items
+            (
+                select jsonb_agg(
+                    jsonb_build_object(
+                        'id', oi.id,
+                        'quantity', oi.quantity,
+                        'unit_price', oi.unit_price,
+                        'total', oi.total,
+
+                        -- Product data
+                        'item', (
+                            select to_jsonb(si)
+                            from store_items si
+                            where si.id = oi.item_id
+                        )
+                    )
+                )
+                from order_items oi
+                where oi.order_id = og.id
+            ) as items
+
+        from order_groups og
+        where og.user_id = p_user_id
+        order by og.created_at desc
+    ) order_group_data;
+
+    return result;
+end;

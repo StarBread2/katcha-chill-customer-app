@@ -1,3 +1,7 @@
+/* Swiper */
+import "swiper/css";
+import "swiper/css/pagination";
+
 //for some reason red ang font
 import "@fontsource/bebas-neue/400.css";
 

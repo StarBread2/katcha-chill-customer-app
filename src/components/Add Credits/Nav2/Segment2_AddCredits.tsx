@@ -47,7 +47,7 @@ export default function MainDisplay_AddCredits({ pendingPurchase, headerBackPres
 
                 const fetchPackage = async () => 
                 {
-                    console.log("Segment2 USEEFFECT DONE");
+                    // console.log("Segment2 USEEFFECT DONE");
                     const pkg = await getCreditPackageById(pendingPurchase.package_id);
                     setCreditPackage(pkg);
                 };

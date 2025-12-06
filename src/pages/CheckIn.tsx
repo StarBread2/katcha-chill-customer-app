@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 //PARTIALS
 import HeaderNav from "../components/Partials/HeaderNav";
 //MAIN
@@ -9,6 +10,7 @@ import PageTransition from "../components/Transitions/PageTransition.tsx";
 //DB
 import { useUser } from "../context/UserContext";
 import { createNewAttendance, getPendingAttendanceByUser } from "../services/attendanceService.tsx";
+import { startAttendanceApprovalListener } from "../services/supabaseRealtimeServices.tsx";
 
 
 
@@ -28,8 +30,9 @@ interface Package
 export default function CheckIn() 
 {
     //#region UNIVERSAL PARAMETERS
+        const navigate = useNavigate();
         //Hook Call
-            const { userPackages, profile } = useUser();
+            const { userPackages, profile, watchPendingAttendance, stopAttendanceListener } = useUser();
         // SEGMENT NAVIGATION
             // Show segment 1 or 2 (true = 1 else 2)
             const [showSegment1, setShowSegment1] = useState(true);
@@ -104,7 +107,52 @@ export default function CheckIn()
         
     // #endregion
 
+    // ASYNC WRAPPER createNewAttendance (await)
+    const handleCreateAttendance = async () => 
+    {
+        if (segment1ButtonPressed && selectedPackage && profile?.id) 
+        {
+            try 
+            {
+                //Check if selectedPackage is in userPackage or credits >= 1
+                if (!checkIfInUserPackage(selectedPackage.package_id)) 
+                {
+                    console.log("No matching user package with enough credits found.");
+                    return;
+                }
 
+                //Check if any accounts are logged in
+                if (!profile?.id) 
+                {
+                    console.log("NO USER ID FOUND (NO USER LOGGED IN)"); 
+                    return;
+                }
+
+                // DB insert attendance row
+                const created = await createNewAttendance(profile.id, String(selectedPackage.user_package_id));
+                console.log("Attendance created:", created);
+
+                //CHECK IF THE NEW ATTENDANCE IS THERE
+                //AND GO TO SEGEMENT 2
+                await checkPendingAttendance();
+
+                const result = await watchPendingAttendance();
+                navigate("/home");
+
+                console.log("result:",result)
+
+                // Wait complete → proceed to next segment
+                setTransitionType("slide-left");
+                setShowSegment1(false);
+            } 
+            catch (err) 
+            {
+                console.error("Failed to create attendance:", err);
+            }
+        }
+
+        
+    };
 
 
 
@@ -138,42 +186,33 @@ export default function CheckIn()
                 {
                     if (!segment1ButtonPressed) return;
                     if (!selectedPackage) return;
+                    if (!profile?.id) return;
 
-                    // ASYNC WRAPPER createNewAttendance (await)
-                    const handleCreateAttendance = async () => 
+                    let isActive = true;
+                    const doAttendance = async () => 
                     {
                         try 
                         {
-                            //Check if selectedPackage is in userPackage or credits >= 1
-                            if (!checkIfInUserPackage(selectedPackage.package_id)) 
-                            {
-                                console.log("No matching user package with enough credits found.");
-                                return;
-                            }
-
-                            //Check if any accounts are logged in
-                            if (!profile?.id) 
-                            {
-                                console.log("NO USER ID FOUND (NO USER LOGGED IN)"); 
-                                return;
-                            }
-
-                            // DB insert attendance row
-                            const created = await createNewAttendance(profile.id, String(selectedPackage.user_package_id));
-                            console.log("Attendance created:", created);
-
-                            // optional: reset the button pressed state so effect doesn't re-run unexpectedly
-                            setSegment1ButtonPressed(false);
-                            setTransitionType("slide-left");
-                            setShowSegment1(false);
+                            await handleCreateAttendance();
                         } 
                         catch (err) 
                         {
-                            console.error("Failed to create attendance:", err);
+                            console.error(err);
+                        } 
+                        finally 
+                        {
+                            // reset flag so it doesn't trigger again
+                            if (isActive) setSegment1ButtonPressed(false);
                         }
-                    };
+                    }
 
-                    handleCreateAttendance();
+                    doAttendance();
+
+                    return () => 
+                    {
+                        // prevent state updates if the component unmounts
+                        isActive = false;
+                    };
                     
                 }, [segment1ButtonPressed, selectedPackage?.package_id]);
                 //RETURN TO SEGMENT 1
@@ -185,9 +224,13 @@ export default function CheckIn()
                     {
                         setTransitionType("slide-right");
                         setShowSegment1(true);
+                        setSelectedPackage(null);
+                        setpendingAttendance(null);
                         setHeaderBackPressed(false);        // reset so it only triggers once
                         setSegment1ButtonPressed(false);    //========================================CAN REMEMBER THE PAST (CHOOSEN PACKAGE OR NAHHG)========================================
                         setSelectedPackage(null);           //RESET THE SELECTED PACKAGE
+                        setcloseModalPressed(false);        // reset modal flag
+                        stopAttendanceListener();
                     }
                 }, [HeaderBackPressed, closeModalPressed]);
         //#endregion

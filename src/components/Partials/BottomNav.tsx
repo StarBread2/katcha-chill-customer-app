@@ -10,7 +10,7 @@ export default function BottomNav()
     const tabs = [
         { id: "progress", label: "Progress", icon: MyProgress_Icon, path: "/progress" },
         { id: "home", label: "Home", icon: Home_Icon, path: "/home" },
-        { id: "store", label: "Store", icon: Store_Icon, path: "/" },
+        { id: "store", label: "Store", icon: Store_Icon, path: "/store" },
     ];
 // fixed bottom-6 left-1/2 -translate-x-1/2
 return (
