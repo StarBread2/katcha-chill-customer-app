@@ -1,40 +1,9 @@
 //3RD PARTY
 import { motion, useMotionValue, animate } from "framer-motion";
 import { div } from "framer-motion/client";
+//ORDER TYPES
+import type { OrderGroupsData, OrderGroups, OrderItems, StoreProduct } from '../../types/storeTypes';
 
-//FOR STORE PRODUCTS
-type StoreProduct = 
-{
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-    image_url: string;
-    featured: boolean;
-}
-type OrderItems = 
-{
-    id: string;
-    product: StoreProduct; 
-    quantity: number;
-    total: number;
-    unit_price: number;
-}
-type OrderGroups = 
-{
-    created_at: string;
-    id: string;
-    order_items: OrderItems[];
-    status: string;
-    total_amount: number;
-    updated_at: string;
-    user_id: string;
-}
-type OrderGroupsData = 
-{
-    order_groups: OrderGroups[];
-}
 interface ModalProps 
 {
     userOrders: OrderGroupsData | null;
@@ -52,15 +21,19 @@ export default function RenderOrderInstance({userOrders, setDeletePressed, setCa
     function OrderItemRow({ orders }: { orders: OrderGroups })
     {
         const x = useMotionValue(0); // Hook is top-level in component
-
+        
         return (
             <div 
-            key={orders.id} 
-            className="relative w-full ">
+                key={orders.id} 
+                className="relative w-full "
+            >
                 <motion.div
                     className="relative z-10"
                     drag="x"
-                    dragConstraints={{ left: -100, right: 0 }}
+                    dragConstraints={{ 
+                        left: orders.status === "Completed" || orders.status === "Out of Stock" ? 0 : -100, 
+                        right: 0 
+                    }}
                     dragElastic={0}
                     dragMomentum={false}
                     onDragEnd={() => 

@@ -49,15 +49,22 @@ export default function Products({ setAddToCartPressed, searchQuery }: HeaderPro
             ):(
                 <div className="grid grid-cols-2 gap-2">
                     {filteredProducts.map((product) => (
+                    // If product stock <= 0 then border == gray
+                    // if featured then red otherwise black (default)
                     <div key={product.id} 
-                        className={`bg-white p-2 rounded-xl border ${product.featured ? "border-[#DE2B2D]" : "border-black"} `}
+                        className={`bg-white p-2 rounded-xl border 
+                            ${product.stock <= 0 ? "border-gray-400" : 
+                            product.featured ? "border-[#DE2B2D]" : "border-black"} `
+                        }
                         onClick={() => setAddToCartPressed({
                             pressed: true,
                             productPressedID: product.id,
                         })}>
                         <div className="relative">
                             {/* FEATURED LABEL */}
-                            { (product.stock < 10 || product.featured) &&
+                            {/* display red label if its featured or almost out 
+                            and if the product.stock is <=0 then dont display it (dafault) */}
+                            { product.stock > 0 && (product.stock < 10 || product.featured) &&
                                 <div className='absolute p-1 px-2 -right-4 -top-4 bg-[#DE2B2D] text-white text-xs rounded-[10px] '>
                                     {product.stock <= 10 ? "Almost Out" : "Featured"}
                                 </div>
@@ -84,7 +91,7 @@ export default function Products({ setAddToCartPressed, searchQuery }: HeaderPro
                                 />
                                 </button>
                             ):(
-                                <button className="absolute bottom-1 right-[6px] bg-white p-2 rounded-[5px] flex gap-3 border border-[1px] border-[#434343]">
+                                <button className="absolute bottom-1 right-[6px] bg-white p-2 rounded-[5px] flex gap-3 border-[1px] border-[#434343]">
                                     <img 
                                         src={ShoppingCart_Gray_Icon} 
                                         alt="Store Icon" 

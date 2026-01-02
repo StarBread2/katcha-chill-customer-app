@@ -1,54 +1,112 @@
-import { ResponsiveContainer, BarChart, Bar, XAxis, Tooltip, Cell, ReferenceLine } from "recharts";
+import { useState, memo, useEffect } from "react";
+//ICONS
 import { ChevronUp_Icon } from "../../assets/index.ts";
+//CONTEXT
+import { useCrowdHistoryContext } from "../../context/CrowdHistoryContext.tsx";
+//PARTIALS
+import ModalConfirmation from "../../components/Partials/modalConfirmation.tsx";
+//3RD PARTY
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell, ReferenceLine } from "recharts";
+//TYPES
+import type { CrowdHistoryPoint, CrowdHistoryDay } from '../../types/crowdHistorytypes.tsx';
+import { FULL_DAY_TIMES } from '../../types/crowdHistorytypes';
 
-import { useState, memo } from "react";
 
 //Used memo to not re render shit
 const CrowdHistoryChart = memo(function CrowdHistoryChart()
 {
-    // Local config
-    const limit = 50;
-    const colors = {
-        low: "#28D977", // Green
-        medium: "#FDB927", // Yellow
-        high: "#FF3B3B", // Red
-    };
+    // DB FETCH
+    const { getCurrentWeeklyCrowdHistory } = useCrowdHistoryContext();
 
-    // Crowd data
-    const data = [
-        { time: "01:00 AM", value: 0 },
-        { time: "02:00 AM", value: 0 },
-        { time: "03:00 AM", value: 0 },
-        { time: "04:00 AM", value: 0 },
-        { time: "05:00 AM", value: 0 },
-        { time: "06:00 AM", value: 0 },
-        { time: "07:00 AM", value: 0 },
-        { time: "08:00 AM", value: 0 },
-        { time: "09:00 AM", value: 2 },
-        { time: "10:00 AM", value: 3 },
-        { time: "11:00 AM", value: 10 },
-        { time: "12:00 PM", value: 5 },
-        { time: "01:00 PM", value: 8 },
-        { time: "02:00 PM", value: 9 },
-        { time: "03:00 PM", value: 16 },
-        { time: "04:00 PM", value: 15 },
-        { time: "05:00 PM", value: 19 },
-        { time: "06:00 PM", value: 25 },
-        { time: "07:00 PM", value: 32 },
-        { time: "08:00 PM", value: 10 },
-        { time: "09:00 PM", value: 10 },
-        { time: "10:00 PM", value: 0 },
-        { time: "11:00 PM", value: 0 },
-        { time: "12:00 PM", value: 0 }
-    ];
+    //#region Utils
+        // Get current day with dayIndex (Week -> day -> number)
+        const getDateFromWeekday = (dayIndex: number) =>
+        {
+            const today = new Date();
+            const todayIndex = today.getDay();
 
-    // Current day highlight
-    const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-    const currentDay = new Date().getDay();
+            const diff = dayIndex - todayIndex;
+            const targetDate = new Date(today);
+            targetDate.setDate(today.getDate() + diff);
 
-    // For hide toggle state (animation)
-    const [isExpanded, setIsExpanded] = useState(true);
-    const toggleExpand = () => setIsExpanded((prev) => !prev);
+            return targetDate.toISOString().split("T")[0]; // YYYY-MM-DD
+        }
+    //#endregion
+    //#region Local config (chart limit, color of candles, hide animation, chart button texts)
+        const limit = 50;
+        const colors = {
+            low: "#28D977", // Green
+            medium: "#FDB927", // Yellow
+            high: "#FF3B3B", // Red
+        };
+
+        // For hide toggle state (animation)
+        const [isExpanded, setIsExpanded] = useState(true);
+        const toggleExpand = () => setIsExpanded((prev) => !prev);
+
+        // Current day highlight
+        const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    //#endregion
+    
+    //#region crowdHistory Data
+        // Get current day index (used in onclick below)
+        const todayIndex = new Date().getDay();
+        // Crowd data
+        const [crowdHistoryDataDay, setCrowdHistoryDataDay] = useState<CrowdHistoryPoint[]>(FULL_DAY_TIMES);
+        // selected day, default: today selected
+        const [selectedDay, setSelectedDay] = useState<number>(todayIndex);
+        
+        // fetch data and update crowdHistoryDataDay for every update of selectedDay
+        useEffect(() => 
+        {
+            let isMounted = true;
+
+            const fetchCrowdHistory = async () => 
+            {
+                const data = await getCurrentWeeklyCrowdHistory(
+                    getDateFromWeekday(selectedDay)
+                );
+
+                if (isMounted) {
+                    setCrowdHistoryDataDay(data);
+                }
+            };
+
+            fetchCrowdHistory();
+
+            return () => 
+            {
+                isMounted = false;
+            };
+        }, [selectedDay])
+
+        // Check if the selectedDay has data
+        const hasData = crowdHistoryDataDay.some(point => point.value > 0);
+    //#endregion
+    
+    //#region Warning Modal
+        const [displayWarningModal_CrowdHistory, setDisplayWarningModal_CrowdHistory] = useState(false);
+        const [modalCloseButtonClicked_CrowdHistory, setmodalCloseButtonClicked_CrowdHistory] = useState(false);
+        const [modalAgreeButonClicled_CrowdHistory, setmodalAgreeButonClicled_CrowdHistory] = useState(false);
+
+        // When modal "Close" button is clicked → hide modal
+        useEffect(() => 
+        {
+            if (modalCloseButtonClicked_CrowdHistory) 
+            {
+                setDisplayWarningModal_CrowdHistory(false); // close modal
+                setmodalCloseButtonClicked_CrowdHistory(false); // reset flag
+            }
+        }, [modalCloseButtonClicked_CrowdHistory]);
+        //WHEN MODAL AGREE (DELETE) IS CLICKED
+        useEffect(() => 
+        {
+            if(!modalAgreeButonClicled_CrowdHistory) return;
+            
+            setDisplayWarningModal_CrowdHistory(false); // close modal
+            setmodalAgreeButonClicled_CrowdHistory(false); //RESET AGREE MODAL CLICKED
+        }, [modalAgreeButonClicled_CrowdHistory]);
+    //#endregion
 
     return (
         <div className="rounded-2xl w-full max-w-sm font-montserrat bg-white shadow-sm">
@@ -77,63 +135,85 @@ const CrowdHistoryChart = memo(function CrowdHistoryChart()
                 >       
                     {/* Days row */}
                     <div className="flex justify-between mt-3">
-                    {days.map((day, i) => (
-                        <div
-                        key={i}
-                        className={`text-xs font-semibold px-2 py-2 rounded-full transition-all duration-300 ${
-                            i === currentDay ? "bg-[#DE2B2D] text-white" : "text-black"
-                        }`}
-                        >
-                        {day}
-                        </div>
-                    ))}
+                        {days.map((day, i) => (
+                            <button
+                                key={i}
+                                onClick={() => 
+                                {
+                                    if (i > todayIndex) 
+                                    {
+                                        setDisplayWarningModal_CrowdHistory(true)
+                                        return;
+                                    }
+                                    setSelectedDay(i)
+                                }}
+                                className={`text-xs font-semibold px-2 py-2 rounded-full transition-all duration-300 ${
+                                    i === selectedDay 
+                                    ? "bg-[#DE2B2D] text-white" 
+                                    : "text-black"
+                                }`}
+                            >
+                                {day}
+                            </button>
+                        ))}
                     </div>
 
                     {/* Chart */}
                     <div className="mt-4 text-[#434343]" style={{ height: 180 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={data} margin={{ top: 0, right: 20, bottom: 0, left: 0 }}>
-                        <XAxis
-                            dataKey="time"
-                            tick={{ fontSize: 11, fill: "#434343", fontWeight: 600 }}
-                            tickLine={false}
-                            axisLine={false}
-                            interval={0}
-                            tickFormatter={(time) =>
-                            ["12:00 AM", "06:00 AM", "12:00 PM", "06:00 PM"].includes(time)
-                                ? time
-                                : ""
-                            }
-                        />
+                        {hasData ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={crowdHistoryDataDay} margin={{ top: 0, right: 20, bottom: 0, left: 0 }}>
+                                <XAxis
+                                    dataKey="time"
+                                    tick={{ fontSize: 11, fill: "#434343", fontWeight: 600 }}
+                                    tickLine={false}
+                                    axisLine={false}
+                                    interval={0}
+                                    tickFormatter={(time) =>
+                                    ["12:00 AM", "06:00 AM", "12:00 PM", "06:00 PM"].includes(time)
+                                        ? time
+                                        : ""
+                                    }
+                                />
+                                <YAxis
+                                    domain={[0, limit]}
+                                    hide
+                                />
 
-                        <ReferenceLine y={0} stroke="#434343" />
+                                <ReferenceLine y={0} stroke="#434343" />
 
-                        <Tooltip
-                            cursor={{ fill: "transparent" }}
-                            contentStyle={{
-                            borderRadius: "10px",
-                            border: "none",
-                            backgroundColor: "#f9f9f9",
-                            fontSize: "0.8rem",
-                            }}
-                            formatter={(value) => [`${value} people`, "Crowd Count"]}
-                            labelFormatter={(label) => `Time: ${label}`}
-                        />
+                                <Tooltip
+                                    cursor={{ fill: "transparent" }}
+                                    contentStyle={{
+                                    borderRadius: "10px",
+                                    border: "none",
+                                    backgroundColor: "#f9f9f9",
+                                    fontSize: "0.8rem",
+                                    }}
+                                    formatter={(value) => [`${value} people`, "Crowd Count"]}
+                                    labelFormatter={(label) => `Time: ${label}`}
+                                />
 
-                        <Bar dataKey="value" radius={[10, 10, 10, 10]} barSize={10}>
-                            {data.map((entry, index) => {
-                            const percentage = (entry.value / limit) * 100;
-                            let color =
-                                percentage <= 40
-                                ? colors.low
-                                : percentage <= 75
-                                ? colors.medium
-                                : colors.high;
-                            return <Cell key={`cell-${index}`} fill={color} />;
-                            })}
-                        </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
+                                <Bar dataKey="value" radius={[10, 10, 10, 10]} barSize={10}>
+                                    {crowdHistoryDataDay.map((entry, index) => {
+                                    const percentage = (entry.value / limit) * 100;
+                                    let color =
+                                        percentage <= 40
+                                        ? colors.low
+                                        : percentage <= 75
+                                        ? colors.medium
+                                        : colors.high;
+                                    return <Cell key={`cell-${index}`} fill={color} />;
+                                    })}
+                                </Bar>
+                                </BarChart>
+                            </ResponsiveContainer>
+                        ): (
+                            <div className="flex items-center justify-center text-center h-full text-sm font-semibold text-gray-400 px-5">
+                                No crowd data available for this day or the gym is closed
+                            </div>
+                        )}
+                        
                     </div>
 
                     {/* Footer */}
@@ -142,7 +222,19 @@ const CrowdHistoryChart = memo(function CrowdHistoryChart()
                     </p>
                 </div> 
             {/* ========== ANIMATION ========== */}
+
+            {displayWarningModal_CrowdHistory && (
+                (<ModalConfirmation 
+                    title="Ooopss" 
+                    message={`You're local gym can't see the future`}
+                    buttonLabel="Go back"
+                    onClose={setmodalCloseButtonClicked_CrowdHistory}
+                    onConfirm={setmodalAgreeButonClicled_CrowdHistory}
+                />)
+            )}
+            
         </div>
+        
     );
 });
 

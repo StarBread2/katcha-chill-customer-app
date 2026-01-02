@@ -1,5 +1,6 @@
-import { supabase } from "../lib/supabaseClient"; // adjust path if needed
+import { supabase } from "../lib/supabaseClient";
 
+//Get available credit packages
 export const getCreditPackages = async () => {
     const { data, error } = await supabase
         .from("credit_packages")

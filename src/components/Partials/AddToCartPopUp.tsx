@@ -83,11 +83,12 @@ export default function AddToCartPopup({productPressedID, onClose, setButtonPres
             {/* POPUP CONTAINER */}
             <PageTransition type="slide-up"> {/* animation wrapper */}
                 <div 
-                    className="bg-white w-full max-w-md rounded-t-3xl p-5 h-[70vh] overflow-y-auto shadow-xl"
+                    className="bg-white w-full max-w-md rounded-t-3xl px-5 h-[70vh] overflow-y-auto shadow-xl"
                     onClick={(e) => e.stopPropagation()} > {/* PREVENT SCROLLIONG*/}
                     {/* Close button */}
+                    <div className="flex flex-col sticky mb-1 top-0 bg-white z-10">
                         <button
-                            className="absolute right-4 bg-white rounded-[20px] hover:text-gray-600 transition-all"
+                            className="w-full flex justify-end mt-5"
                             onClick={() => onClose?.(true)}
                         >
                             <img
@@ -96,6 +97,8 @@ export default function AddToCartPopup({productPressedID, onClose, setButtonPres
                                 className="w-7 h-7"
                             />
                         </button>
+                    </div>
+                    
 
                     {/* IMAGE & TITLE */}
                     <div className="flex gap-4 mt-7">

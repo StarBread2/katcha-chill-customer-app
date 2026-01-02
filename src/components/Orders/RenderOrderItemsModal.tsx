@@ -4,40 +4,8 @@ import { createPortal } from "react-dom";
 import FooterButton from "../../components/Partials/FooterButton";
 //SVG
 import { Close_Icon } from "../../assets/index.ts";
-
-//FOR STORE PRODUCTS
-type StoreProduct = 
-{
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-    image_url: string;
-    featured: boolean;
-}
-type OrderItems = 
-{
-    id: string;
-    product: StoreProduct; 
-    quantity: number;
-    total: number;
-    unit_price: number;
-}
-type OrderGroups = 
-{
-    created_at: string;
-    id: string;
-    order_items: OrderItems[];
-    status: string;
-    total_amount: number;
-    updated_at: string;
-    user_id: string;
-}
-type OrderGroupsData = 
-{
-    order_groups: OrderGroups[];
-}
+//ORDER TYPES
+import type { OrderGroupsData, OrderGroups, OrderItems, StoreProduct } from '../../types/storeTypes.tsx';
 
 interface ModalProps
 {
@@ -50,37 +18,111 @@ interface ModalProps
     setFooterButtonPressed: (value: boolean) => void;
 }
 
-
 export default function RenderOrderItemSModal({onClose, userItemsClickedData, setFooterButtonPressed}:ModalProps)
 {
+    // Pre calculated DATES
+    const orderedOn = userItemsClickedData?.created_at
+    ? new Date(userItemsClickedData.created_at).toLocaleString("en-PH", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+        })
+    : "";
+    const paidOn = userItemsClickedData?.paid_on
+    ? new Date(userItemsClickedData.paid_on).toLocaleString("en-PH", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+        })
+    : "";
+
+    console.log(userItemsClickedData)
+
     return createPortal(
         <div 
             className=" fixed inset-0 bg-black/40 bg-gradient-to-b from-transparent to-black/40 backdrop-blur-sm flex items-end justify-center font-montserrat"
             onClick={() => onClose?.(true)}
             >
             <div 
-                className="bg-white w-full max-w-md rounded-t-3xl p-5 h-[90vh] overflow-y-auto shadow-xl z-25"
+                className="bg-white w-full max-w-md px-5 h-[100vh] overflow-y-auto shadow-xl z-25"
                 onClick={(e) => e.stopPropagation()}
                 >
-                {/* Close button */}
-                <button
-                    className="absolute right-4 bg-white rounded-[20px] hover:text-gray-600 transition-all"
-                    onClick={() => onClose?.(true)}
-                >
-                    <img
-                        src={Close_Icon}
-                        alt="Close"
-                        className="w-7 h-7"
-                    />
-                </button>
+
+                {/* HEADER OF THE MODAL
+                    USING STICKY WTF I JUST KNOW THIS */}
+                <div className="flex flex-col sticky mb-3 top-0 bg-white z-10">
+                    {/* HEADER MAIN TOP */}
+                        {/* Close button */}
+                        <div className="w-full flex justify-end mt-5">
+                            <button
+                                className="bg-white rounded-[20px]"
+                                onClick={() => onClose?.(true)}
+                            >
+                                <img
+                                    src={Close_Icon}
+                                    alt="Close"
+                                    className="w-7 h-7"
+                                />
+                            </button>
+                        </div>
+
+                        {/* HEADER TEXT */}
+                        <p className="flex-1 text-center pb-3 text-lg font-bold">
+                            Order #{userItemsClickedData?.id.toString().slice(0, 8)}
+                        </p>
+                    
+
+                    {/* HEADER DETAILS*/}
+                        <div className="mt-3">
+                            <p className="pb-2 text-lg font-bold">
+                                Details
+                            </p>
+
+                            <div className="flex justify-between mb-5">
+                                <p className="text-sm font-normal text-[#434343]">
+                                    Order Status
+                                </p>
+
+                                <p className={`font-semibold ${
+                                    userItemsClickedData?.status === "Completed" ? "text-green-600" :
+                                    userItemsClickedData?.status === "Out of Stock" ? "text-red-600" :
+                                    "text-red-600" // Pending
+                                }`}>
+                                    ● {userItemsClickedData?.status === "Completed" ? "Completed" :
+                                    userItemsClickedData?.status === "Out of Stock" ? "Out of Stock" :
+                                    "Pending"}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="mb-3">
+                            {orderedOn && (
+                                <p className="text-sm font-normal text-[#434343]">
+                                    Ordered On: {orderedOn}
+                                </p>
+                            )}
+                            {paidOn && (
+                                <p className="text-sm font-normal text-[#434343]">
+                                    Paid On: {paidOn}
+                                </p>
+                            )}
+                            {userItemsClickedData?.payment_method && (
+                                <p className="text-sm font-normal text-[#434343]">
+                                    Paid by: {userItemsClickedData?.payment_method}
+                                </p>
+                            )}
+                        </div>
+                </div>
+                
 
                 {/* CONTAINER OF THE PRODUCTS AND HEADER */}
                 <div>
-                    {/* HEADER TEXT */}
-                    <p className="text-center py-3 text-lg font-bold">
-                        Order #{userItemsClickedData?.id.toString().slice(0, 8)}
-                    </p>
-
                     {/* ACTUAL PRODUCTS IN THE ORDER */}
                     <div className="flex flex-col gap-3 pb-[190px]">
                         {userItemsClickedData?.order_items.map((userItemClickedData) => (
@@ -132,3 +174,15 @@ export default function RenderOrderItemSModal({onClose, userItemsClickedData, se
         </div>, document.body
     );
 }
+
+
+//<button
+//    className="absolute right-4 bg-white rounded-[20px] hover:text-gray-600 transition-all"
+//    onClick={() => onClose?.(true)}
+//>
+//    <img
+//        src={Close_Icon}
+//        alt="Close"
+//        className="w-7 h-7"
+//    />
+//</button>

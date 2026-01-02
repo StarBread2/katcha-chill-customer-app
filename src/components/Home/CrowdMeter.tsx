@@ -1,26 +1,24 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate  } from "react-router-dom";
-
 //PARTIALS
 import CrowdMeter_Bar from "../Partials/CrowdMeter_Bar";
 import ModalConfirmation from "../Partials/modalConfirmation.tsx";
-
 //ICONS
 import { Crowd_Icon, MoreHorizontal_Icon, CheckIn_Icon, CheckOut_Icon } from '../../assets/index.ts';
-
-//DB
+//CONTEXT
 import { useUser } from "../../context/UserContext";
+import { useCrowdHistoryContext } from "../../context/CrowdHistoryContext.tsx";
 
 export default function CrowdMeter() 
 {
     //#region UNIVERSAL 
         //DB
             const { profile, checkOutUser } = useUser();
+            const { crowdCountNow } = useCrowdHistoryContext();
         const navigate = useNavigate();
         const GymCoins = profile?.credits_balance ?? 0;
         // FOR CROWD BAR
             let Customerlimit = 50;
-            let customerCount = 20;
         
     //#endregion
 
@@ -110,7 +108,7 @@ export default function CrowdMeter()
     //#endregion
 
     return (
-        <div className="bg-white rounded-[20px] p-6 pb-6 shadow-md font-montserrat w-[98%] mx-auto">
+        <div className="bg-white rounded-[20px] p-6 pb-6  font-montserrat w-[98%] mx-auto">
             {/* 🔹 Top Bar */}
             <div className="flex justify-between items-center mb-0">
                 <h3 className="font-bold text-base text-black">Magatas, Sibulan</h3>
@@ -135,7 +133,7 @@ export default function CrowdMeter()
                 </div>
                 
                 <div className="flex space-x-1">
-                    <CrowdMeter_Bar limit={Customerlimit} value={customerCount} />
+                    <CrowdMeter_Bar limit={Customerlimit} value={crowdCountNow} />
                 </div>
             </div>
 

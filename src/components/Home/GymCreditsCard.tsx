@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export default function GymCreditsCard({GymCoins}: HeaderProps) {
     return (
-        <div className="relative bg-white rounded-[20px] p-6 pb-6 shadow-md font-montserrat w-[98%] mx-auto">
+        <div className="relative bg-white rounded-[20px] p-6 pb-6  font-montserrat w-[98%] mx-auto">
             
             {/* 🔹 Help Icon (top-right corner) */}
             <img

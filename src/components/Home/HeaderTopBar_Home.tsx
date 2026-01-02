@@ -46,17 +46,17 @@ export default function HeaderTopBar({ GymCoin}: HeaderProps)
         <div className='relative z-10'>
             {/* 🔹 Top bar */}
             <motion.div
-            variants={{
-                visible: { y: 0 },
-                hidden: { y: -100 },
-            }}
-            animate={hidden ? "hidden" : "visible"}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="fixed top-[5%] left-[5%] w-[90%] z-50 flex justify-between items-center
-                        // px-6 py-3 bg-black/30 text-white rounded-full"
+                variants={{
+                    visible: { y: 0 },
+                    hidden: { y: -100 },
+                }}
+                animate={hidden ? "hidden" : "visible"}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                className="fixed top-[5%] left-[5%] w-[90%] z-50 flex justify-between items-center
+                            px-3 py-2 bg-black/70 text-white rounded-full"
             >
                 {/* 🔹 GymCoin Display */}
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-full"
+                <div className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full"
                     onClick={() => navigate("/home/availableCredits")}>
                     <img src={GymCoin_Colored} alt="Gym Coin" className="w-6 h-6" />
                     <span className="font-bold text-base">{GymCoin}</span>

@@ -12,7 +12,7 @@ import { Ring } from "@uiball/loaders";
 export default function Dashboard() 
 {
     // #region QUERY
-        const NotifState=true; //FOR FUTURE IF THERE IS NOTIFICATION
+        const NotifState = true; //FOR FUTURE IF THERE IS NOTIFICATION
         const { profile, loading } = useUser();
     // #endregion
 

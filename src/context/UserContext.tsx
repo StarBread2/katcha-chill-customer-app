@@ -20,8 +20,9 @@ import { GymCoin_Colored } from '../assets/index.ts';
 //3RD PARTY SHITS
 import QRCode from "qrcode";
 import { toast } from "sonner";
-
-
+//TYPES
+    //FOR STORE TYPES
+    import type { OrderGroupsData, OrderGroups, OrderItems, StoreProduct } from '../types/storeTypes.tsx';
 
 
 type CheckInResult = 
@@ -31,14 +32,11 @@ type CheckInResult =
     count: number;               // how many approved check-ins for today
     timeSpent: string | null;    // human readable duration (e.g. "1 hour and 30 minutes")
 };
-
 type RealTimeListeners = 
 {
     attendanceListener: boolean; //OR CHECK IN
     creditPackageListener: boolean;
 };
-
-
 type UserProfile = 
 {
     id?: string;
@@ -57,7 +55,6 @@ type UserProfile =
     //CHECK ACTIVE LISTENERS
     RealTimeListeners?: RealTimeListeners| null
 };
-
 type UserContextType = 
 {
     user: any | null;
@@ -124,15 +121,10 @@ type UserContextType =
         checkIfOrderIsProcessed: (order_id: string) => Promise<any | null>;
         // STOP THE REALTIME LISTENER
         stopWatchingOrderIsProcessed: () => void;
-
 };
 
 
-
-
-
-
-// FOR CREDIT PACKAGES
+// // FOR CREDIT PACKAGES
 type CreditPackage = {
     package_id: string;
     name: string;
@@ -153,16 +145,6 @@ type UserPackage = {
     purchased_at: string;
     transaction_id: number;
 };
-//FOR STORE PRODUCTS
-type StoreProduct = {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-    image_url: string;
-    featured: boolean;
-};
 type UserCart = {
     cart_id: number;
     user_id: number;
@@ -172,29 +154,8 @@ type UserCart = {
     product: StoreProduct| null;
     cartTotalAmount: number;
 };
-type OrderItems = 
-{
-    id: string;
-    product: StoreProduct; 
-    quantity: number;
-    total: number;
-    unit_price: number;
-};
-type OrderGroups = {
-    created_at: string;
-    id: string;
-    order_items: OrderItems[];
-    status: string;
-    total_amount: number;
-    updated_at: string;
-    user_id: string;
-};
-type OrderGroupsData = 
-{
-    order_groups: OrderGroups[];
-};
 
-const UserContext = createContext<UserContextType | undefined>(undefined);
+export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 {
@@ -202,8 +163,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
-
-    
 
     // JSON DATA BROS
     const [packages, setPackages] = useState<CreditPackage[]>([]);
@@ -331,7 +290,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-    //
+    //Get available credit packages
     const fetchPackages = async () => 
     {
         try 
@@ -368,6 +327,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [profile?.id]);
 
+    // Get available credit packages(made by the gym) after user dock
     useEffect(() => 
     {
         if (user) fetchPackages();
@@ -1007,10 +967,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 {children}
         </UserContext.Provider>
     );
-    };
+};
 
-    export const useUser = () => 
-    {
+export const useUser = () => 
+{
     const context = useContext(UserContext);
     if (!context) throw new Error("useUser must be used within a UserProvider");
     return context;

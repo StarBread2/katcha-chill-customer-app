@@ -59,10 +59,7 @@ export default function FeaturedProducts({ setAddToCartPressed }: HeaderProps)
                         const isActive = index === active;
 
                         return (
-                            <SwiperSlide
-                                key={p.id}
-                                className="transition-all duration-300"
-                            >
+                            <SwiperSlide key={p.id}>
                                 <div
                                     className={`
                                         bg-white rounded-[30px] w-full mx-auto transition-all duration-300
@@ -92,7 +89,7 @@ export default function FeaturedProducts({ setAddToCartPressed }: HeaderProps)
                                                 Add to Cart
                                             </button>
                                         ):(
-                                            <button className="ml-4 absolute rounded-[20px] -mt-6 px-7 py-[10px] bg-white flex items-center justify-center gap-2 text-xs border border-[1px] border-[#434343]">
+                                            <button className="ml-4 absolute rounded-[20px] -mt-6 px-7 py-[10px] bg-white flex items-center justify-center gap-2 text-xs border-[1px] border-[#434343]">
                                                 <img src={ShoppingCart_Gray_Icon} className="w-[14px] h-[15px]" />
                                                 <p className='text-[#434343] text-xs font-semibold'>Out of stock</p>
                                             </button>

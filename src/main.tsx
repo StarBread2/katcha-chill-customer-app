@@ -22,13 +22,22 @@ import './index.css'
 import App from './App.tsx'
 
 import { AuthProvider } from "./auth/AuthProvider"; 
+// USER CONTEXT
 import { UserProvider } from "./context/UserContext.tsx";
+// PROGRESS CONTEXT
+import { ProgressProvider } from "./context/ProgressContext.tsx";
+// CROWD HISTORY CONTEXT
+import { CrowdHistoryProvider } from "./context/CrowdHistoryContext.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <UserProvider>
-        <App />
+        <ProgressProvider>
+          <CrowdHistoryProvider>
+            <App />
+          </CrowdHistoryProvider>
+        </ProgressProvider>
       </UserProvider>
     </AuthProvider>
   </StrictMode>,

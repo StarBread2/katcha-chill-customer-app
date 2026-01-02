@@ -1,40 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+//ICONS
 import { Check_Icon, ClockRed_Icon, Fire_Icon } from '../../assets/index.ts';
+//PROGRESS CONTEXT
+import { useProgressContext } from "../../context/ProgressContext.tsx";
+//TYPES
+import type { gymActivityStats, GymActivityStatsSummary } from '../../types/progressTypes.tsx';
 
 type PeriodKey = "weekly" | "monthly" | "yearly";
 
-interface ActivityPeriod {
-    period: string;
-    totalCheckIns: number;
-    avgWorkoutMin: number;
-    totalBurnedCalories: number;
-}
 
-interface HeaderProps {
-    stats: {
-        weekly: ActivityPeriod;
-        monthly: ActivityPeriod;
-        yearly: ActivityPeriod;
-    };
-}
-
-export default function UserProgress({ stats }: HeaderProps) 
+export default function UserProgress() 
 {
+    // fetched data from db ()
+    const { gymActivityStatsSummary, getMonthlyGymActivitySummary, getYearlyGymActivitySummary } = useProgressContext();
+
+    // selected gym activity summary (weekly, monthly, yearly)
     const [selected, setSelected] = useState<PeriodKey>("weekly");
+    const current = gymActivityStatsSummary.stats[selected];
 
-    const current = stats[selected];
+    // flag to only fetch once in supabase
+    const monthlyFetchedRef = useRef(false);
+    const yearlyFetchedRef = useRef(false);
 
-    const tabBaseClass =
-        "px-5 py-3 rounded-[20px] text-sm font-medium transition-all";
-    const activeClass = "bg-black text-white";
-    const inactiveClass = "bg-[#E6E6E6] text-black";
-    
+    //#region button design
+        const tabBaseClass =
+            "px-5 py-3 rounded-[20px] text-sm font-medium transition-all";
+        const activeClass = "bg-black text-white";
+        const inactiveClass = "bg-[#E6E6E6] text-black";
+    //#endregion
     return (
         <div>
             {/* Gym Activity */}
             <section>
                 <h2 className="font-bold text-lg text-left mb-5">Gym Activity</h2>
-                <p className="text-base font-semibold text-black text-left ml-2">{current.period}</p>
+                <p className="text-base font-semibold text-black text-left ml-2">{current.dateRange}</p>
 
 
                 {/* Stats Cards */}
@@ -42,7 +41,7 @@ export default function UserProgress({ stats }: HeaderProps)
                     <div className="flex-1 bg-white rounded-[20px] border-2 border-[#E6E6E6] shadow-sm p-4  mr-2 flex flex-col justify-between h-[115px]">
                         <div className="flex items-center justify-between">
                             <img src={Check_Icon} alt="Check Icon" className="w-6 h-6" />
-                            <p className="text-2xl font-bold">{current.totalCheckIns}</p>
+                            <p className="text-2xl font-bold">{current.checkIn}</p>
                         </div>
                         <p className="text-sm text-[#434343] text-left">Check-ins</p>
                     </div>
@@ -61,7 +60,7 @@ export default function UserProgress({ stats }: HeaderProps)
                     <div className="flex-1 bg-white rounded-[20px] border-2 border-[#E6E6E6] shadow-sm p-4 flex flex-col justify-between h-[105px]">
                         <div className="flex items-center justify-between">
                             <img src={Fire_Icon} alt="Clock Icon" className="w-6 h-6" />
-                            <p className="text-2xl font-bold">{current.totalBurnedCalories}</p>
+                            <p className="text-2xl font-bold">{current.burnedCalories}</p>
                         </div>
                         <p className="text-sm text-[#434343] text-left">Burned Calories</p>
                     </div>
@@ -77,13 +76,27 @@ export default function UserProgress({ stats }: HeaderProps)
                         Week
                     </button>
                     <button
-                        onClick={() => setSelected("monthly")}
+                        onClick={() => {
+                            setSelected("monthly")
+                            // fetch only once
+                            if (!monthlyFetchedRef.current) {
+                                monthlyFetchedRef.current = true;
+                                getMonthlyGymActivitySummary(0);
+                            }
+                        }}
                         className={`${tabBaseClass} ${selected === "monthly" ? activeClass : inactiveClass}`}
                     >
                         Month
                     </button>
                     <button
-                        onClick={() => setSelected("yearly")}
+                        onClick={() => {
+                            setSelected("yearly")
+                            // fetch only once
+                            if (!yearlyFetchedRef.current) {
+                                yearlyFetchedRef.current = true;
+                                getYearlyGymActivitySummary(0);
+                            }
+                        }}
                         className={`${tabBaseClass} ${selected === "yearly" ? activeClass : inactiveClass}`}
                     >
                         Year

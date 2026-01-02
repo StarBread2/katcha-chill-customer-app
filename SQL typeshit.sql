@@ -579,6 +579,128 @@ status (text)
     created_at (timestamptz)
     updated_at (timestamptz)
     status (Pending, Completed, Out of Stock)
+    paid_on (timestampz)
+    payment_method (gcash, cash)
+
+
+
+
+
+
+this:
+name: user_packages
+user_package_id (bigint)
+user_id (uuid)
+expiration_date (timestamptz)
+credits_remaining (smallint)
+status (	active, expired, used_up)
+purchased_at (timestamptz)
+transaction_id (bigint)
+package_id (bigint)
+
+i want a cron every hour that check user_packages.expiration_date if now is same as or past the user_packages.expiration_date then update the user_packages.status to expired
+
+
+
+
+
+
+
+
+
+
+
+
+so this db:
+table name: store_items
+id (uuid) primary key
+name (text)
+description (text)
+price (numeric)
+stock (integer)
+created_at (timestamptz)
+featured (bool)
+image_url (text)
+
+make a trigger when that listens to the changes in store_items.stock
+
+if there is a change only if its less than before
+
+then:
+
+this:
+table name: order_items
+    id (uuid) primary key
+    order_id (uuid) (relation) order_id -> public.order_groups.id 
+    item_id (uuid) (relation) item_id -> public.store_items.id
+    quantity (integer)
+    unit_price (numeric)
+    total (numeric)
+
+with the the store_items with the changes of the stock check any order_items that is order_items.quantity > store_items.stock and then
+
+This db:
+table name: order_groups
+    id (uuid) primary key
+    user_id (uuid) user_id -> public.profiles.id
+    total_amount (numeric)
+    created_at (timestamptz)
+    updated_at (timestamptz)
+    status (Pending, Completed, Out of Stock)
+    paid_on (timestampz)
+    payment_method (gcash, cash)
+
+check if the reference product order_groups.status if its pending and if it is pending change it to out of stock
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this db:
+table name: order_groups
+    id (uuid) primary key
+    user_id (uuid) user_id -> public.profiles.id
+    total_amount (numeric)
+    created_at (timestamptz)
+    updated_at (timestamptz)
+    status (Pending, Completed, Out of Stock)
+    paid_on (timestampz)
+    payment_method (gcash, cash)
+
+make a trigger when status == Completed then paid_on == curent timestamp
+
+Then
+with this db:
+
+table name: store_items
+id (uuid) primary key
+name (text)
+description (text)
+price (numeric)
+stock (integer)
+created_at (timestamptz)
+featured (bool)
+image_url (text)
+
+table name: order_items 
+    id (uuid) primary key
+    order_id (uuid) (relation) order_id -> public.order_groups.id 
+    item_id (uuid) (relation) item_id -> public.store_items.id
+    quantity (integer)
+    unit_price (numeric)
+    total (numeric)
+
+with every order_items.order_id == the one that status get == completed, get its order_items.quantity for every product then for every product store_items.stock get subtracted on order_items.quantity
 
 
 
@@ -735,6 +857,62 @@ begin
         from order_groups og
         where og.user_id = p_user_id
         order by og.created_at desc
+    ) order_group_data;
+
+    return result;
+end;
+
+
+
+declare
+    result jsonb;
+begin
+    select jsonb_build_object(
+        'order_groups',
+        jsonb_agg(order_group_data)
+    ) into result
+    from (
+        select 
+            og.id,
+            og.user_id,
+            og.total_amount,
+            og.created_at,
+            og.updated_at,
+            og.status,
+            og.paid_on,
+            og.payment_method,
+
+            -- Renamed: order_items
+            (
+                select jsonb_agg(
+                    jsonb_build_object(
+                        'id', oi.id,
+                        'quantity', oi.quantity,
+                        'unit_price', oi.unit_price,
+                        'total', oi.total,
+
+                        -- Renamed: product
+                        'product', (
+                            select to_jsonb(si)
+                            from store_items si
+                            where si.id = oi.item_id
+                        )
+                    )
+                )
+                from order_items oi
+                where oi.order_id = og.id
+            ) as order_items
+
+        from order_groups og
+        where og.user_id = p_user_id
+        order by
+        case og.status
+            when 'Pending' then 0
+            when 'Out of Stock' then 1
+            when 'Completed' then 2
+            else 3
+        end,
+        og.created_at desc
     ) order_group_data;
 
     return result;

@@ -8,44 +8,12 @@ import HeaderNav from "../components/Partials/HeaderNav";
 import ModalConfirmation from "../components/Partials/modalConfirmation.tsx";
 //SVG
 import { Check_White_Icon } from '../assets/index.ts';
-//DB
+//USER CONTEXT
 import { useUser } from "../context/UserContext";
 //3RD PARTY
 import { toast } from "sonner";
-
-//FOR STORE PRODUCTS
-type StoreProduct = 
-{
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-    image_url: string;
-    featured: boolean;
-}
-type OrderItems = 
-{
-    id: string;
-    product: StoreProduct; 
-    quantity: number;
-    total: number;
-    unit_price: number;
-}
-type OrderGroups = 
-{
-    created_at: string;
-    id: string;
-    order_items: OrderItems[];
-    status: string;
-    total_amount: number;
-    updated_at: string;
-    user_id: string;
-}
-type OrderGroupsData = 
-{
-    order_groups: OrderGroups[];
-}
+//ORDER TYPES
+import type { OrderGroupsData, OrderGroups, OrderItems, StoreProduct } from '../types/storeTypes.tsx';
 
 export default function Order() 
 {
