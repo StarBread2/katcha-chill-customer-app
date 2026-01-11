@@ -83,15 +83,15 @@ export default function MyProgress()
     //#endregion
 
     //#region Data for mini modals
-        const burnedCalories: WeeklyActivityData[] = [
-            { date: "error", day: "S", value: 50 },
-            { date: "error", day: "M", value: 80 },
-            { date: "error", day: "T", value: 90 },
-            { date: "error", day: "W", value: 0 },
-            { date: "error", day: "T", value: 0 },
-            { date: "error", day: "F", value: 117 },
-            { date: "error", day: "S", value: 200 },
-        ];
+        // const burnedCalories: WeeklyActivityData[] = [
+        //     { date: "error", day: "S", value: 50 },
+        //     { date: "error", day: "M", value: 80 },
+        //     { date: "error", day: "T", value: 90 },
+        //     { date: "error", day: "W", value: 0 },
+        //     { date: "error", day: "T", value: 0 },
+        //     { date: "error", day: "F", value: 117 },
+        //     { date: "error", day: "S", value: 200 },
+        // ];
     //#endregion
 
     //#region sliderShit (UNUSED)
@@ -116,9 +116,9 @@ export default function MyProgress()
     //#endregion
 
     return (
-        <div className="font-montserrat min-h-screen bg-white flex flex-col">
+        <div className="font-montserrat min-h-screen bg-[#fefefe]  flex flex-col">
             {/* HEADER PART */}
-            <div className="relative h-[575px] flex flex-col px-6 pb-20 text-center">
+            <div className="relative h-[400px] flex flex-col px-6 pb-0 text-center">
                 <div className="pt-[115px]">
                     <HeaderNav title="Progress" showBackButton={false}/>
                 </div>
@@ -127,17 +127,19 @@ export default function MyProgress()
             </div>
 
             {/* GRAY PART */}
-            <div className="relative bg-[#E6E6E6] rounded-t-[50px] -mt-12 w-full h-[700px]">
-                <div className="mt-8 bg-white rounded-[20px] p-5 w-[90%] space-y-6 mx-auto shadow-sm">
-                    
+            <div className="relative bg-[#f3f0f3] rounded-t-[50px] w-full h-[450px]">
+
+                <p className="font-bold text-lg mt-8 mb-2 ml-5">Insights & Analytics</p>
+
+                <div className="bg-white rounded-[20px] p-5 w-[90%] space-y-6 mx-auto shadow-sm">
                     {/* WEEKLY ACTIVITY */}
                     <WeeklyChart weeklyData={weeklyActivityData} barColor={"#3B7BF9"} chartTitle="Weekly Activity"
                         setButtonPressed_leftChevron={setLeftChevronPressed} setButtonPressed_today={setTodayPressed} setButtonPressed_rightChevron={setRightChevronPressed}/>
                 </div>
 
-                <div className="mt-3 bg-white rounded-[20px] p-5 w-[90%] space-y-6 mx-auto shadow-sm">
+                {/* <div className="mt-3 bg-white rounded-[20px] p-5 w-[90%] space-y-6 mx-auto shadow-sm"> */}
                     {/* BURNED CALORIES */}
-                    {isConnectedHealthConnect ? (
+                    {/* {isConnectedHealthConnect ? (
                         <WeeklyChart weeklyData={burnedCalories} barColor={"#DE2B2D"} chartTitle="Burned Calories"/>
                     ): (
                         <div className="flex items-center justify-center">
@@ -151,8 +153,8 @@ export default function MyProgress()
                             </div>
                         </div>
                         )
-                    }
-                </div>
+                    } */}
+                {/* </div> */}
             </div>
         </div>
     );

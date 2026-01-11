@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { Close_Icon } from "../../assets/index.ts";
+import { Close_Icon } from "../../assets/assets.ts";
 
 //CSS TRANSITION
 import PageTransition from "../../components/Transitions/PageTransition.tsx";

@@ -16,7 +16,7 @@ import { checkOutCart } from "../services/checkOutCartServiceRPC";
 import { getUserOrders as getUserOrdersService } from "../services/orderGroupsAndItemsRPC";
 import { deleteOrderGroup as deleteOrderGroupService, waitForOrderCompletion, stopWatchingOrder} from "../services/orderGroupsService";
 //SVG
-import { GymCoin_Colored } from '../assets/index.ts';
+import { GymCoin_Colored } from '../assets/assets.ts';
 //3RD PARTY SHITS
 import QRCode from "qrcode";
 import { toast } from "sonner";
@@ -62,6 +62,7 @@ type UserContextType =
     loading: boolean;
     refreshProfile: () => Promise<void>;
     qrDataUrl?: string | null;
+    qrDataUrl_WName?: string | null;
     refreshQr: () => Promise<void>;
     packages: CreditPackage[];
     refreshPackages: () => Promise<void>;
@@ -212,60 +213,99 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     // Generate a QR data URL from a string and cache it in localStorage
-    const generateQrWithLogo = async (text: string, size = 512) => 
+    const generateQrWithLogo = async (text: string, name?: string, role?: string, size = 512): Promise<string | null> => 
     {
-        try {
-            // 1. Create QR to canvas
+        try 
+        {
+            const hasText = Boolean(name);
+
+            const paddingBottom = hasText ? 90 : 0;
             const canvas = document.createElement("canvas");
 
-            await QRCode.toCanvas(canvas, text, {
+            canvas.width = size;
+            canvas.height = size + paddingBottom;
+
+            // QR canvas
+            const qrCanvas = document.createElement("canvas");
+            await QRCode.toCanvas(qrCanvas, text, {
             width: size,
             margin: 1,
-            errorCorrectionLevel: "H", // REQUIRED for logo safety
+            errorCorrectionLevel: "H",
             });
 
             const ctx = canvas.getContext("2d");
             if (!ctx) return null;
 
-            // 2. Load your SVG logo
+            // Background
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw QR
+            ctx.drawImage(qrCanvas, 0, 0);
+
+            // Load logo
             const logo = new Image();
             logo.src = GymCoin_Colored;
 
             return new Promise<string | null>((resolve) => {
             logo.onload = () => {
-                const logoSize = size * 0.22; // 22% of QR size (perfect ratio)
+                const logoSize = size * 0.22;
                 const x = (size - logoSize) / 2;
                 const y = (size - logoSize) / 2;
 
-                // 3. Draw white rounded background behind logo
+                // White rounded background
                 ctx.beginPath();
                 ctx.roundRect(x - 10, y - 10, logoSize + 20, logoSize + 20, 16);
                 ctx.fillStyle = "white";
                 ctx.fill();
 
-                // 4. Draw logo
+                // Logo
                 ctx.drawImage(logo, x, y, logoSize, logoSize);
 
-                // 5. Export final QR
-                const finalQR = canvas.toDataURL("image/png");
-                resolve(finalQR);
+                // ---- OPTIONAL TEXT ----
+                if (hasText && name) {
+                const centerX = size / 2;
+                const baseY = size + 30;
+
+                ctx.textAlign = "center";
+                ctx.fillStyle = "#000";
+
+                // Name
+                ctx.font = "bold 20px Montserrat, sans-serif";
+                ctx.fillText(name, centerX, baseY);
+
+                // Role
+                const roleLabel =
+                    role === "admin"
+                    ? "Katcha Chill Admin"
+                    : "Katcha Chill Member";
+
+                ctx.font = "16px Montserrat, sans-serif";
+                ctx.fillText(roleLabel, centerX, baseY + 26);
+                }
+
+                resolve(canvas.toDataURL("image/png"));
             };
 
             logo.onerror = () => resolve(null);
             });
-        } catch (err) {
+        } catch (err) 
+        {
             console.error("QR generation error:", err);
             return null;
         }
     };
 
-    const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+    // For in app use
+    const [qrDataUrl, setqrDataUrl] = useState<string | null>(null);
+    // For downloadble user qr
+    const [qrDataUrl_WName, setQrDataUrl_WName] = useState<string | null>(null);
 
     const refreshQr = async () => 
     {
         if (!profile?.id) 
         {
-            setQrDataUrl(null);
+            setqrDataUrl(null);
             return;
         }
 
@@ -275,18 +315,30 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (cached) 
         {
-            setQrDataUrl(cached);
+            setqrDataUrl(cached);
             return;
         }
-            const url = await generateQrWithLogo(profile.id, 512);
-            if (url) 
-            {
-                localStorage.setItem(key, url);
-                setQrDataUrl(url);
-            } 
+
+        const url = await generateQrWithLogo(profile.id);
+        const url_wName = await generateQrWithLogo(profile.id, profile.full_name, profile.role);
+
+        if (url) 
+        {
+            localStorage.setItem(key, url);
+            setqrDataUrl(url);
+        } 
         else 
         {
-            setQrDataUrl(null);
+            setqrDataUrl(null);
+        }
+
+        if (url_wName)
+        {
+            setQrDataUrl_WName(url_wName);
+        }
+        else
+        {
+            setQrDataUrl_WName(null);
         }
     };
 
@@ -316,7 +368,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     {
         if (!profile) 
         {
-            setQrDataUrl(null);
+            setQrDataUrl_WName(null);
             return;
         }
         // try to use cached copy OR generate
@@ -844,7 +896,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 return;
             }
 
-            const url = await generateQrWithLogo(order_id, 512);
+            const url = await generateQrWithLogo(order_id);
             if (url) 
             {
                 setQrDataUrl_ProductToBePaid(url);
@@ -925,6 +977,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 loading,
                 refreshProfile: fetchProfile,
                 qrDataUrl,
+                qrDataUrl_WName,
                 refreshQr,
                 packages,
                 refreshPackages: fetchPackages,

@@ -1,6 +1,6 @@
 import { useState } from "react";
 //ICONS
-import { ChevronLeft_Icon, ChevronRight_Icon } from "../../assets/index.ts";
+import { ChevronLeft_Icon, ChevronRight_Icon } from "../../assets/assets.ts";
 //TYPES
 import type { WeeklyActivityData } from '../../types/progressTypes.tsx';
 

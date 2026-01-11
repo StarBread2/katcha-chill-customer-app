@@ -1,5 +1,5 @@
-import { Clock_Icon, Location_Icon, Phone_Icon } from "../../assets/index.ts";
-import { ChevronUp_Icon } from "../../assets/index.ts";
+import { Clock_Icon, Location_Icon, Phone_Icon } from "../../assets/assets.ts";
+import { ChevronUp_Icon } from "../../assets/assets.ts";
 
 import { useState,memo } from "react";
 

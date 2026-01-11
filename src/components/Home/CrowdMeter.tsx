@@ -4,7 +4,7 @@ import { Link, useNavigate  } from "react-router-dom";
 import CrowdMeter_Bar from "../Partials/CrowdMeter_Bar";
 import ModalConfirmation from "../Partials/modalConfirmation.tsx";
 //ICONS
-import { Crowd_Icon, MoreHorizontal_Icon, CheckIn_Icon, CheckOut_Icon } from '../../assets/index.ts';
+import { Crowd_Icon, MoreHorizontal_Icon, CheckIn_Icon, CheckOut_Icon } from '../../assets/assets.ts';
 //CONTEXT
 import { useUser } from "../../context/UserContext";
 import { useCrowdHistoryContext } from "../../context/CrowdHistoryContext.tsx";

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../context/UserContext.tsx";
 
-import { GymCoin_Colored } from "../../../assets/index.ts"; 
+import { GymCoin_Colored } from "../../../assets/assets.ts"; 
 import FooterButton from "../../Partials/FooterButton.tsx";
 import ModalConfirmation from "../../Partials/modalConfirmation.tsx";
 

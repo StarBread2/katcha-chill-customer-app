@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
 //SVG
-import { ShoppingCart_Icon, ShoppingCart_Gray_Icon } from '../../assets/index.ts';
+import { ShoppingCart_Icon, ShoppingCart_Gray_Icon } from '../../assets/assets.ts';
 
 //DB
 import { useUser } from "../../context/UserContext";

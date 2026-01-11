@@ -13,7 +13,7 @@ import HeaderTopBar from "./HeaderTopBar_Home.tsx"
 import { useUser } from "../../context/UserContext";
 
 //ICONS
-import { GymBg } from '../../assets/index.ts';
+import { GymBg } from '../../assets/assets.ts';
 
 interface HeaderProps {
     NotifState: boolean;

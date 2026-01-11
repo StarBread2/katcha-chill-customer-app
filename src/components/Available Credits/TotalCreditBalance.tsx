@@ -1,4 +1,4 @@
-import { GymCoin_Colored } from "../../assets/index"; 
+import { GymCoin_Colored } from "../../assets/assets"; 
 
 interface TotalCredits_Props
 {

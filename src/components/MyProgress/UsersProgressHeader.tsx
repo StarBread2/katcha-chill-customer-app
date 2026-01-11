@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 //ICONS
-import { Check_Icon, ClockRed_Icon, Fire_Icon } from '../../assets/index.ts';
+import { Check_Icon, ClockRed_Icon, Fire_Icon } from '../../assets/assets.ts';
 //PROGRESS CONTEXT
 import { useProgressContext } from "../../context/ProgressContext.tsx";
 //TYPES
@@ -56,7 +56,7 @@ export default function UserProgress()
 
                 </div>
 
-                <div className="px-2 mb-6">
+                {/* <div className="px-2 mb-6">
                     <div className="flex-1 bg-white rounded-[20px] border-2 border-[#E6E6E6] shadow-sm p-4 flex flex-col justify-between h-[105px]">
                         <div className="flex items-center justify-between">
                             <img src={Fire_Icon} alt="Clock Icon" className="w-6 h-6" />
@@ -64,7 +64,7 @@ export default function UserProgress()
                         </div>
                         <p className="text-sm text-[#434343] text-left">Burned Calories</p>
                     </div>
-                </div>
+                </div> */}
                 
 
                 {/* Tabs */}

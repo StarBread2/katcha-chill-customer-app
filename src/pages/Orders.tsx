@@ -7,7 +7,7 @@ import RenderOrderItemSModal from "../components/Orders/RenderOrderItemsModal.ts
 import HeaderNav from "../components/Partials/HeaderNav";
 import ModalConfirmation from "../components/Partials/modalConfirmation.tsx";
 //SVG
-import { Check_White_Icon } from '../assets/index.ts';
+import { Check_White_Icon } from '../assets/assets.ts';
 //USER CONTEXT
 import { useUser } from "../context/UserContext";
 //3RD PARTY

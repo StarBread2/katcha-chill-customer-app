@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { GymCoin_Colored, Help_Icon } from '../../assets/index.ts';
+import { GymCoin_Colored, Help_Icon } from '../../assets/assets.ts';
 
 interface HeaderProps {    
     GymCoins: number;     

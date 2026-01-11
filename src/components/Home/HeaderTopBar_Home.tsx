@@ -1,5 +1,5 @@
 
-import { GymBg, GymCoin_Colored, Notification_Icon, Settings_Icon } from '../../assets/index.ts';
+import { GymBg, GymCoin_Colored, Notification_Icon, Settings_Icon } from '../../assets/assets.ts';
 
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 

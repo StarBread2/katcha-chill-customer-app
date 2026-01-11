@@ -7,7 +7,7 @@ import Products from "../components/Store/Products.tsx"
 import HeaderTopBar from "../components/Store/HeaderTopBar_Store.tsx"
 import AddToCartPopUp from "../components/Partials/AddToCartPopUp.tsx"
 //SVG
-import { ShoppingCart_Icon, GymBg } from '../assets/index.ts';
+import { ShoppingCart_Icon, GymBg } from '../assets/assets.ts';
 //DB
 import { useUser } from "../context/UserContext";
 import { addToCart } from "../services/userCartService.tsx";
@@ -113,7 +113,7 @@ export default function Store()
             </div>
             
             {/* MAIN BOTTOM SHIT */}
-            <div className="relative bg-[#E6E6E6] rounded-t-[50px] -mt-12 w-full pb-[130px]">
+            <div className="relative bg-[#e7e2e7] rounded-t-[50px] -mt-12 w-full pb-[130px]">
                 <h3 className="font-bold -mt-20 px-6 text-white mb-3">Featured Products</h3>
                 {/* Featured Products */}
                 <FeaturedProducts setAddToCartPressed={setAddToCartPressed}/>

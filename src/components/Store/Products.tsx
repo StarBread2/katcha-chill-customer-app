@@ -5,7 +5,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { useUser } from "../../context/UserContext";
 
 //SVG
-import { ShoppingCart_Icon, ShoppingCart_Gray_Icon } from '../../assets/index.ts';
+import { ShoppingCart_Icon, ShoppingCart_Gray_Icon } from '../../assets/assets.ts';
 import { div } from "framer-motion/client";
 
 type addToCartPressed = 

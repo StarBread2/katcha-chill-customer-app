@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 //PARTIALS
 import FooterButton from "./FooterButton.tsx";
 //SVG
-import { Close_Icon } from "../../assets/index.ts";
+import { Close_Icon } from "../../assets/assets.ts";
 //DB
 import { useUser } from "../../context/UserContext.tsx";
 //CSS TRANSITION

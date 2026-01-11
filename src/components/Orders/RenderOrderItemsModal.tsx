@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 //PARTIALS
 import FooterButton from "../../components/Partials/FooterButton";
 //SVG
-import { Close_Icon } from "../../assets/index.ts";
+import { Close_Icon } from "../../assets/assets.ts";
 //ORDER TYPES
 import type { OrderGroupsData, OrderGroups, OrderItems, StoreProduct } from '../../types/storeTypes.tsx';
 

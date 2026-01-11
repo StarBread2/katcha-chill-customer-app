@@ -1,4 +1,4 @@
-import {  ShoppingCart_Black_Icon, Search_Icon, Orders_Icon } from '../../assets/index.ts';
+import {  ShoppingCart_Black_Icon, Search_Icon, Orders_Icon } from '../../assets/assets.ts';
 
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 

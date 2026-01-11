@@ -33,7 +33,7 @@ export default function Dashboard()
             <Header GymCoin={profile?.credits_balance ?? 0} NotifState={NotifState} Name={profile?.full_name ?? "freind"}/>
             
             {/* Overlapping section with main inside */}
-            <div className="relative bg-[#E6E6E6] rounded-t-[50px] -mt-12 z-1 w-full h-[500px]">
+            <div className="relative bg-[#e7e2e7] rounded-t-[50px] -mt-12 z-1 w-full h-[500px]">
                 {/* Main content sits inside the section */}
                 <main className="relative px-2 py-6 space-y-6 -mt-16 z-2">
                     <CrowdMeter />

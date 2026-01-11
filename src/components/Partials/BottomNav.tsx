@@ -1,6 +1,6 @@
 import { useNavigate, useLocation  } from "react-router-dom";
 
-import { Home_Icon, MyProgress_Icon, Store_Icon, Settings_Icon } from "../../assets/index.ts";
+import { Home_Icon, MyProgress_Icon, Store_Icon, Settings_Icon } from "../../assets/assets.ts";
 import { div } from "framer-motion/client";
 
 export default function BottomNav() 

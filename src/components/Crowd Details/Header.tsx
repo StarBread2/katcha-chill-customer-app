@@ -1,4 +1,4 @@
-import { Crowd_Icon } from "../../assets";
+import { Crowd_Icon } from "../../assets/assets";
 import CrowdMeter_Bar from "../Partials/CrowdMeter_Bar";
 
 

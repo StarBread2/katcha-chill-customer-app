@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 
-import { Minus_Icon, Plus_Icon, PlusBlack_Icon, } from "../../assets/index.ts";
+import { Minus_Icon, Plus_Icon, PlusBlack_Icon, } from "../../assets/assets.ts";
 import { div } from "framer-motion/client";
 
 

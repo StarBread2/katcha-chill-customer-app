@@ -12,7 +12,7 @@ import TotalCredits from "../components/Available Credits/TotalCreditBalance";
 import mergeUserPackages from "../utils/mergeUserPackages";
 
 //ICONS
-import { Refresh_Icon } from "../assets/index";
+import { Refresh_Icon } from "../assets/assets";
 
 
 export default function AvailableCredits() 

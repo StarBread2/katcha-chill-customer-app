@@ -1,6 +1,6 @@
 import { useState, memo, useEffect } from "react";
 //ICONS
-import { ChevronUp_Icon } from "../../assets/index.ts";
+import { ChevronUp_Icon } from "../../assets/assets.ts";
 //CONTEXT
 import { useCrowdHistoryContext } from "../../context/CrowdHistoryContext.tsx";
 //PARTIALS

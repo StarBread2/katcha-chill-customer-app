@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GymCoin_Colored, KatchaChillLogo_Image_BW } from "../../assets/index.ts";
+import { GymCoin_Colored, KatchaChillLogo_Image_BW } from "../../assets/assets.ts";
 
 // Package Format
 interface Package 

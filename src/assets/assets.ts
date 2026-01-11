@@ -2,6 +2,7 @@
 // Onboarding
     // Login
         import Google_Icon from '../assets/Onboarding/Google.svg';
+        import Facebook_Icon from '../assets/Onboarding/Facbook.svg';
     // Login
     import KatchaChillLogo_Image from '../assets/Onboarding/KatchaChillLogo.png';
 // Onboarding
@@ -103,7 +104,7 @@ export
 { 
     // Onboarding
         // Login
-            Google_Icon,
+            Google_Icon, Facebook_Icon,
         // Login
         KatchaChillLogo_Image, 
     // Onboarding
