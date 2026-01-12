@@ -37,7 +37,7 @@ export default function ModalConfirmation({ title, message, buttonLabel, onClose
 
     return createPortal(
         <div 
-            className="z-50 font-montserrat fixed bottom-0 left-0 w-full h-full flex justify-center items-end bg-gradient-to-b from-transparent to-black/40 backdrop-blur-sm p-6"
+            className="z-50 font-montserrat fixed bottom-0 left-0 w-full h-full flex justify-center items-end bg-gradient-to-b from-transparent to-black/40 p-6"
             onClick={() => onClose?.(true)} // Clicking outside closes modal
         >
             <PageTransition type="slide-up"> {/* animation wrapper */}

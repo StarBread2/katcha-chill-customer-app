@@ -78,7 +78,7 @@ export default function AddToCartPopup({productPressedID, onClose, setButtonPres
 
     return createPortal(
         <div className=
-            "fixed inset-0 bg-black/40 bg-gradient-to-b from-transparent to-black/40 backdrop-blur-sm flex items-end justify-center z-20 font-montserrat"
+            "fixed inset-0 bg-black/40 bg-gradient-to-b from-transparent to-black/40 flex items-end justify-center z-20 font-montserrat"
             onClick={() => onClose?.(true)}>
             {/* POPUP CONTAINER */}
             <PageTransition type="slide-up"> {/* animation wrapper */}

@@ -189,13 +189,13 @@ export default function MainDisplay_AddCredits({ pendingPurchase, headerBackPres
                 </div>
             </div>
 
-            <FooterButton label={footerButton} navigateTo="/home"/>
+            {/* <FooterButton label={footerButton} navigateTo="/home"/> */}
 
             {displayWarningModal &&
             (<ModalConfirmation 
-                title="Delete Transaction" 
+                title="Go Back?" 
                 message="Are you sure you want to do this?" 
-                buttonLabel="Delete Transaction"
+                buttonLabel="Choose Credits"
                 onClose={setmodalCloseButtonClicked}
                 onConfirm={setmodalAgreeButtonClicked}
             />)

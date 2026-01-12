@@ -128,13 +128,13 @@ export default function Segment2_CheckIn({pendingAttendance, headerBackPressed, 
                 </p>
             </div>
 
-            <FooterButton label="Go Home" navigateTo="/home"/>
+            {/* <FooterButton label="Go Home" navigateTo="/home"/> */}
 
             {displayWarningModal &&
             (<ModalConfirmation 
-                title="Delete Attendance Query" 
+                title="Go Back?" 
                 message="Are you sure you want to do this?" 
-                buttonLabel="Delete"
+                buttonLabel="Choose Credits"
                 onClose={setmodalCloseButtonClicked}
                 onConfirm={setmodalAgreeButtonClicked}
             />)}
