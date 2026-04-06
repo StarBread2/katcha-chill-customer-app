@@ -470,7 +470,115 @@ BEGIN
 END;
 
 
+NEW db:
+name: credit_purchases
+id (bigint)
+user_id (uuid)
+package_amount (smallint)
+amount_paid (integer)
+payment_method (	gcash, cash)
+created_at (timestamptz)
+purchase_state (	pending, paid)
+package_id (bigint)
 
+name: user_packages
+user_package_id (bigint)
+user_id (uuid)
+expiration_date (timestamptz)
+credits_remaining (smallint)
+status (	active, expired, used_up)
+purchased_at (timestamptz)
+transaction_id (bigint)
+package_id (bigint)
+
+
+table name: attendance 
+attendance_id (bigint) 
+user_id (uuid) 
+user_package_id (bigint) 
+check_in (timestamptz) 
+check_out (timestamptz) 
+checkin_approved (bool)
+
+
+
+table name: profiles 
+id (uuid)
+full_name (text)
+role (text)
+credits_balance (integer)
+created_at (timestamptz)
+updated_at (timestamptz)
+checked_in (bool)
+
+table name: store_items
+id (uuid) primary key
+name (text)
+description (text)
+price (numeric)
+stock (integer)
+created_at (timestamptz)
+featured (bool)
+image_url (text)
+average_rating (float4)
+review_count (int2)
+rating_1_count (int2) 
+rating_2_count (int2) 
+rating_3_count (int2) 
+rating_4_count (int2) 
+rating_5_count (int2)
+
+
+table name: user_cart
+cart_id (uuid)
+user_id (uuid) (relation) user_id->public.profiles.id
+product_id (uuid) (relation) product_id->public.store_items.id
+quantity (integer)
+created_at (timestampz)
+
+table name: order_items
+id (uuid) primary key
+order_id (uuid) (relation) order_id -> public.order_groups.id 
+item_id (uuid) (relation) item_id -> public.store_items.id
+quantity (integer)
+unit_price (numeric)
+total (numeric)
+
+table name: order_groups
+id (uuid) primary key
+user_id (uuid) user_id -> public.profiles.id
+total_amount (numeric)
+created_at (timestamptz)
+updated_at (timestamptz)
+status (Pending, Completed, Out of Stock)
+paid_on (timestampz)
+payment_method (gcash, cash)
+
+
+table name: product_reviews
+
+id (uuid) primary key
+user_id (uuid) -> profiles.id
+product_id (uuid) -> store_items.id
+order_item_id (uuid) -> order_items.id
+
+rating (int2)  -- 1 to 5
+review_text (text)
+
+created_at (timestamptz)
+updated_at (timestamptz)
+
+
+
+
+
+
+
+
+
+
+
+OLD DB:
 name: credit_purchases
 id (bigint)
 user_id (uuid)

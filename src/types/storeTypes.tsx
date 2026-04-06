@@ -8,6 +8,14 @@ export type StoreProduct = {
     stock: number;
     image_url: string;
     featured: boolean;
+    average_rating: number;
+    review_count: number;
+
+    rating_1_count: number;
+    rating_2_count: number;
+    rating_3_count: number;
+    rating_4_count: number;
+    rating_5_count: number;
 };
 export type OrderItems = {
     id: string;

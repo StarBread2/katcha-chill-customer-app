@@ -141,7 +141,7 @@ export default function CrowdMeter()
             <div className="flex flex-col items-center">
                 <button
                     onClick={handleCheckInClick}
-                    className={`flex items-center justify-center gap-2 rounded-full w-[221px] py-3 text-base font-medium text-white transition-all duration-300 ${
+                    className={`flex items-center justify-center gap-2 rounded-full w-[221px] py-3 text-base font-medium text-white active:scale-[0.98] transition-all duration-300 ${
                     profile?.checked_in ? "bg-[#28D977]" : "bg-red-600"
                     }`}
                 >

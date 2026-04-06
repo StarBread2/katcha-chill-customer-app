@@ -62,7 +62,7 @@ export default function FeaturedProducts({ setAddToCartPressed }: HeaderProps)
                             <SwiperSlide key={p.id}>
                                 <div
                                     className={`
-                                        bg-white rounded-[30px] w-full mx-auto transition-all duration-300
+                                        bg-white rounded-[30px] w-full mx-auto transition-all duration-300 active:scale-[0.98] transition
                                         ${isActive ? "scale-100" : "scale-90"}
                                     `}
                                     onClick={() => setAddToCartPressed({
@@ -79,7 +79,7 @@ export default function FeaturedProducts({ setAddToCartPressed }: HeaderProps)
 
                                         {p.stock > 0 ? (
                                             <button 
-                                            className="ml-4 absolute rounded-[20px] -mt-6 px-7 py-[10px] bg-black text-white flex items-center justify-center gap-2 text-xs"
+                                            className="ml-4 absolute rounded-[20px] -mt-6 px-7 py-[10px] bg-black text-white flex items-center justify-center gap-2 text-xs active:scale-[0.98] transition"
                                                 onClick={() => setAddToCartPressed({
                                                         pressed: true,
                                                         productPressedID: p.id,
@@ -89,7 +89,7 @@ export default function FeaturedProducts({ setAddToCartPressed }: HeaderProps)
                                                 Add to Cart
                                             </button>
                                         ):(
-                                            <button className="ml-4 absolute rounded-[20px] -mt-6 px-7 py-[10px] bg-white flex items-center justify-center gap-2 text-xs border-[1px] border-[#434343]">
+                                            <button className="ml-4 absolute rounded-[20px] -mt-6 px-7 py-[10px] bg-white flex items-center justify-center gap-2 text-xs border-[1px] border-[#434343] active:scale-[0.98] transition">
                                                 <img src={ShoppingCart_Gray_Icon} className="w-[14px] h-[15px]" />
                                                 <p className='text-[#434343] text-xs font-semibold'>Out of stock</p>
                                             </button>

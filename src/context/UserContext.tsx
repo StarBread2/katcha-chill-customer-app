@@ -10,11 +10,12 @@ import { startPurchaseListener, startAttendanceApprovalListener } from "../servi
 import { getUserPackages } from "../services/userPackageService";
 import { getUserProfile, checkOutUser as checkOutUserService } from "../services/profileService";
 import { getCreditPackages } from "../services/packageService";
-import { getStoreItems } from "../services/storeProductsService";
+import { getStoreItems, getStoreItemById } from "../services/storeProductsService";
 import { addToCart, getUserCart, getUserCartWithProducts, deleteCartItem as deleteCartItemService, updateCartItemQuantity as updateCartItemQuantityService } from "../services/userCartService";
 import { checkOutCart } from "../services/checkOutCartServiceRPC";
 import { getUserOrders as getUserOrdersService } from "../services/orderGroupsAndItemsRPC";
 import { deleteOrderGroup as deleteOrderGroupService, waitForOrderCompletion, stopWatchingOrder} from "../services/orderGroupsService";
+import { getProductReviews, checkIfUserCanReview as checkIfUserCanReview_rpc, createProductReview } from "../services/reviewsServices.tsx";
 //SVG
 import { GymCoin_Colored } from '../assets/assets.ts';
 //3RD PARTY SHITS
@@ -23,6 +24,8 @@ import { toast } from "sonner";
 //TYPES
     //FOR STORE TYPES
     import type { OrderGroupsData, OrderGroups, OrderItems, StoreProduct } from '../types/storeTypes.tsx';
+    //FOR REVIEW TYPES
+    import type { UserReviewStatus, ProductReviews } from '../types/reviewTypes.tsx';
 
 
 type CheckInResult = 
@@ -122,6 +125,20 @@ type UserContextType =
         checkIfOrderIsProcessed: (order_id: string) => Promise<any | null>;
         // STOP THE REALTIME LISTENER
         stopWatchingOrderIsProcessed: () => void;
+
+    //PRODUCT REVIEWS
+        reviewsData: ProductReviews[];
+        fetchReviewsData: (productId: number) => Promise<any | null>;
+
+        // TURNING REVIEW TO NULL (OUTSIDE) SO THAT IT WILL REFETCH DATA IN DB
+        setuserReviewStatus: React.Dispatch<React.SetStateAction<UserReviewStatus | null>>;
+        checkIfUserCanReview: (productId: number, forceFetch?: boolean) => Promise<UserReviewStatus | null>;
+        createReview: (data: {
+            product_id: number;
+            order_item_id: number;
+            rating: number;
+            review_text: string;
+        }) => Promise<any | null>;
 };
 
 
@@ -674,7 +691,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         };
 
-        const getStoreProductById = (productId: number): StoreProduct | null =>
+        const getStoreProductById_Nofetch = (productId: number): StoreProduct | null =>
         {
             //IF storeProducts EMPTY THEN RETURN 
             if (!storeProducts || storeProducts.length === 0) return null;
@@ -968,7 +985,102 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         }
     //#endregion
+    
+    // #region REVIEWS SERVICES
+        // #region READ REVIEWS DATA
+            const [reviewsData, setreviewsData] = useState<ProductReviews[]>([]);
+            const [userReviewStatus, setuserReviewStatus] =useState<UserReviewStatus | null>(null);
+            
+            // GET ALL THE REVIEWS BY EVERY USER OF THE productId 
+            const fetchReviewsData = async (productId: number) => 
+            {
+                try 
+                {
+                    const reviews = await getProductReviews(productId); // from your Supabase service
+                    setreviewsData(reviews);
+                } 
+                catch (err) 
+                {
+                    console.error("Error fetching reviews data:", err);
+                    setreviewsData([]);
+                }
+            };
 
+            // CHECK IF CURRENT USER CAN REVIEW THE productId
+            // IF SAME PRODUCT ID THEN DONT FETCH IN DB
+            const checkIfUserCanReview = async (productId: number, forceFetch: boolean = false) =>
+            {
+                if (!user?.id) 
+                {
+                    console.warn("checkIfUserCanReview: No logged-in user");
+                    return null;
+                }
+
+                if(!forceFetch)
+                {
+                    console.log("cache")
+                    if (userReviewStatus?.product_id === productId) return userReviewStatus;
+                }
+
+                try 
+                {
+                    const data = await checkIfUserCanReview_rpc(user.id, productId);
+                    setuserReviewStatus(data);
+                    console.log(data)
+                    return data;
+                } 
+                catch (error) 
+                {
+                    console.error("Error checking if user can review:", error);
+                    return null;
+                }
+            };
+
+            const createReview = async ({
+                product_id,
+                order_item_id,
+                rating,
+                review_text
+            }: {
+                product_id: number;
+                order_item_id: number;
+                rating: number;
+                review_text: string;
+            }) => 
+            {
+                if (!user?.id) 
+                {
+                    console.warn("createReview: No logged-in user");
+                    return null;
+                }
+
+                try 
+                {
+                    const reviews = await createProductReview({
+                        user_id: user.id,
+                        product_id,
+                        order_item_id,
+                        rating,
+                        review_text
+                    });
+
+                    // Refresh reviews after insert
+                    await fetchReviewsData(product_id);
+                    // Refresh if user can review
+                    await checkIfUserCanReview(product_id, true);
+
+                    await fetchStoreProducts();
+                } 
+                catch (err) 
+                {
+                    console.error("createReview error:", err);
+                    return null;
+                }
+            };
+
+        // #endregion
+        
+    // #endregion
     return (
         <UserContext.Provider
             value={{
@@ -992,7 +1104,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 storeProducts,
                 featuredProducts,
                 fetchStoreProducts,
-                getStoreProductById,
+                getStoreProductById: getStoreProductById_Nofetch,
 
                 addItemToCart,
                 cart,
@@ -1016,6 +1128,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
                 checkIfOrderIsProcessed,
                 stopWatchingOrderIsProcessed,
+
+                reviewsData,
+                fetchReviewsData,
+
+                setuserReviewStatus,
+                checkIfUserCanReview,
+                createReview,
             }}>
                 {children}
         </UserContext.Provider>

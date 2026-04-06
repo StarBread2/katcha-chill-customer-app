@@ -248,7 +248,7 @@ const FooterButton: React.FC<BottomButtonProps> = ({
                                 <div className="flex items-center gap-2 ">
                                     <button
                                         aria-label="Increase quantity"
-                                        className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-800 bg-white text-white text-lg"
+                                        className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-800 bg-white text-white text-lg active:scale-[0.98] transition"
                                         onClick={subtractAmountValue}
                                     >
                                         <img
@@ -262,7 +262,7 @@ const FooterButton: React.FC<BottomButtonProps> = ({
                                     </div>
                                     <button
                                         aria-label="Increase quantity"
-                                        className={`flex h-8 w-8 items-center justify-center rounded-full border border-gray-800 text-white text-lg ${buttonAdd}`}
+                                        className={`flex h-8 w-8 items-center justify-center rounded-full border border-gray-800 text-white text-lg ${buttonAdd} active:scale-[0.98] transition`}
                                         onClick={addAmountValue}
                                     >
                                         {makeAmountPressable ? (
@@ -301,7 +301,7 @@ const FooterButton: React.FC<BottomButtonProps> = ({
                 <button
                     onClick={handleClick}
                     disabled={disabledStyles}
-                    className={`w-[90%] ${buttonBg} ${buttonText} ${cursorStyle} py-4 rounded-[10px] flex items-center justify-center gap-2 text-base shadow-lg transition-all duration-300 ${marginTopButton}`}
+                    className={`w-[90%] ${buttonBg} ${buttonText} ${cursorStyle} py-4 rounded-[10px] flex items-center justify-center gap-2 text-base shadow-lg transition-all duration-300 ${marginTopButton} active:scale-[0.98]`}
                 >
                     {icon ? (<img src={icon} alt={`${label} Icon`} className="w-5 h-5" />) : null}
 

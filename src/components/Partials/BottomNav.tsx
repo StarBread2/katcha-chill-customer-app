@@ -68,7 +68,7 @@ export default function BottomNav()
                         border border-white/20 shadow-lg
                         rounded-full
                         flex justify-between items-center
-                        px-4 py-3
+                        px-4 py-3 
                     "
                 >
                     {tabs.map((tab) => {
@@ -78,7 +78,7 @@ export default function BottomNav()
                             <button
                                 key={tab.id}
                                 onClick={() => navigate(tab.path)}
-                                className=" flex-1 flex flex-col items-center justify-center text-xs transition-all duration-200"
+                                className=" flex-1 flex flex-col items-center justify-center text-xs transition-all duration-200 "
                             >
                                 <div
                                     className={`flex flex-col items-center gap-0.5 

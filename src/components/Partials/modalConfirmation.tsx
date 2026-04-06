@@ -75,7 +75,7 @@ export default function ModalConfirmation({ title, message, buttonLabel, onClose
                             }
                             onConfirm?.(true);
                         }}
-                        className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 rounded-lg transition-all mt-6">
+                        className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 rounded-lg active:scale-[0.98] transition-all mt-6">
                         {buttonLabel} 
                     </button>
                 </div>

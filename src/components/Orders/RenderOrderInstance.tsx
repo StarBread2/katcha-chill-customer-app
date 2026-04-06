@@ -100,7 +100,7 @@ export default function RenderOrderInstance({userOrders, setDeletePressed, setCa
                         <div className="flex justify-center -mt-2 pb-4">
                             {orders.status=="Pending" ? (
                                 <button 
-                                    className="bg-black text-white text-sm p-2 px-3 rounded-[20px] flex justify-center w-[90%]"
+                                    className="bg-black text-white text-sm p-2 px-3 rounded-[20px] flex justify-center w-[90%] active:scale-[0.98] transition"
                                     onClick={() => 
                                             {    
                                                 setDisplayUser_Items(true);
@@ -111,7 +111,7 @@ export default function RenderOrderInstance({userOrders, setDeletePressed, setCa
                                 </button>
                             ):(
                                 <button 
-                                    className="bg-white text-black text-sm p-2 px-3 rounded-[20px] flex justify-center w-[90%] border border-black"
+                                    className="bg-white text-black text-sm p-2 px-3 rounded-[20px] flex justify-center w-[90%] border border-black active:scale-[0.98] transition"
                                     onClick={() => 
                                             {    
                                                 setDisplayUser_Items(true);

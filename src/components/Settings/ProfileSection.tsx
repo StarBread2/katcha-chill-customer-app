@@ -33,9 +33,9 @@ export default function ProfileSection_Settings({ userName, memberSince, user_av
                         />
                     ) : (
                         <div className="flex-shrink-0 aspect-square font-bebas w-14 h-14 bg-black rounded-full flex items-center justify-center text-4xl font-semibold text-white">
-                        <span className="translate-y-[2px]">
-                            {userInitial}
-                        </span>
+                            <span className="translate-y-[2px]">
+                                {userInitial}
+                            </span>
                         </div>
                     )}
 

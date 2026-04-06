@@ -90,7 +90,7 @@ export default function RenderCartInstance({ cart, setDeletePressed, setCartIdPr
                                 </p>
                             </div>
                             <button 
-                                className=" bg-black text-white text-sm p-2 px-3 rounded-[20px] flex justify-center"
+                                className=" bg-black text-white text-sm p-2 px-3 rounded-[20px] flex justify-center active:scale-[0.98] transition"
                                 onClick={() => {
                                         setdisplayUpdatePopup(true)
                                         setCartIdPresed(product)

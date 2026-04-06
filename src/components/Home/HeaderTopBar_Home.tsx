@@ -56,7 +56,7 @@ export default function HeaderTopBar({ GymCoin}: HeaderProps)
                             px-3 py-2 bg-black/70 text-white rounded-full"
             >
                 {/* 🔹 GymCoin Display */}
-                <div className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full"
+                <div className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full active:scale-[0.98] transition"
                     onClick={() => navigate("/home/availableCredits")}>
                     <img src={GymCoin_Colored} alt="Gym Coin" className="w-6 h-6" />
                     <span className="font-bold text-base">{GymCoin}</span>
@@ -75,7 +75,7 @@ export default function HeaderTopBar({ GymCoin}: HeaderProps)
                         </div> */}
                     {/* ========== NOTIFICATION ========== */}
 
-                    <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center" 
+                    <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center active:scale-[0.98] transition" 
                         onClick={() => navigate("/settings")}>
                         <img src={Settings_Icon} alt="Settings" className="w-5 h-5" />
                     </div>

@@ -38,7 +38,7 @@ export default function UserProgress()
 
                 {/* Stats Cards */}
                 <div className="flex justify-between mt-3 mb-2.5 px-2">
-                    <div className="flex-1 bg-white rounded-[20px] border-2 border-[#E6E6E6] shadow-sm p-4  mr-2 flex flex-col justify-between h-[115px]">
+                    <div className="flex-1 bg-white rounded-[20px] border-2 border-[#E6E6E6] shadow-sm p-4  mr-2 flex flex-col justify-between h-[115px] active:scale-[0.98] transition">
                         <div className="flex items-center justify-between">
                             <img src={Check_Icon} alt="Check Icon" className="w-6 h-6" />
                             <p className="text-2xl font-bold">{current.checkIn}</p>
@@ -46,7 +46,7 @@ export default function UserProgress()
                         <p className="text-sm text-[#434343] text-left">Check-ins</p>
                     </div>
 
-                    <div className="flex-1 bg-white rounded-[20px] border-2 border-[#E6E6E6] shadow-sm p-4 flex flex-col justify-between h-[115px]">
+                    <div className="flex-1 bg-white rounded-[20px] border-2 border-[#E6E6E6] shadow-sm p-4 flex flex-col justify-between h-[115px] active:scale-[0.98] transition">
                         <div className="flex items-center justify-between">
                             <img src={ClockRed_Icon} alt="Clock Icon" className="w-6 h-6" />
                             <p className="text-2xl font-bold">{current.avgWorkoutMin}</p>
@@ -71,7 +71,7 @@ export default function UserProgress()
                 <div className="inline-flex justify-center space-x-2 bg-[#E6E6E6] rounded-[20px] p-1">
                     <button
                         onClick={() => setSelected("weekly")}
-                        className={`${tabBaseClass} ${selected === "weekly" ? activeClass : inactiveClass}`}
+                        className={`${tabBaseClass} ${selected === "weekly" ? activeClass : inactiveClass} active:scale-[0.98] transition`}
                     >
                         Week
                     </button>
@@ -84,7 +84,7 @@ export default function UserProgress()
                                 getMonthlyGymActivitySummary(0);
                             }
                         }}
-                        className={`${tabBaseClass} ${selected === "monthly" ? activeClass : inactiveClass}`}
+                        className={`${tabBaseClass} ${selected === "monthly" ? activeClass : inactiveClass} active:scale-[0.98] transition`}
                     >
                         Month
                     </button>
@@ -97,7 +97,7 @@ export default function UserProgress()
                                 getYearlyGymActivitySummary(0);
                             }
                         }}
-                        className={`${tabBaseClass} ${selected === "yearly" ? activeClass : inactiveClass}`}
+                        className={`${tabBaseClass} ${selected === "yearly" ? activeClass : inactiveClass} active:scale-[0.98] transition`}
                     >
                         Year
                     </button>

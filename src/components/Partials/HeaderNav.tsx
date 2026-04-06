@@ -76,7 +76,7 @@ export default function HeaderNav(
 
         return createPortal(
             
-            <div className="fixed top-0 left-0 w-full bg-white">
+            <div className="fixed top-0 left-0 w-full bg-white z-10">
                 {/* 🔹 Top Header */}
                 <div className="flex items-center justify-between px-4 pt-14 pb-2">
 

@@ -78,7 +78,7 @@ export default function WeeklyChart({
                     </div>
 
                     <div className="flex items-center gap-1">
-                        <div className="rounded-xl p-[0.1rem] bg-white toggle-bg transition-colors duration-300" 
+                        <div className="rounded-xl p-[0.1rem] bg-white toggle-bg transition-colors duration-300 active:scale-[0.98]" 
                             onClick={(e) => 
                             {
                                 flashGray(e.currentTarget);
@@ -92,7 +92,7 @@ export default function WeeklyChart({
                             />
                         </div>
                         
-                        <p className="text-xs text-[#434343] font-medium rounded-xl px-2 py-[0.3rem] bg-white toggle-bg transition-colors duration-300"
+                        <p className="text-xs text-[#434343] font-medium rounded-xl px-2 py-[0.3rem] bg-white toggle-bg transition-colors duration-300 active:scale-[0.98] "
                             onClick={(e) => 
                             {
                                 flashGray(e.currentTarget);
@@ -102,7 +102,7 @@ export default function WeeklyChart({
                             Today
                         </p>
 
-                        <div className="rounded-xl p-[0.1rem] bg-white toggle-bg transition-colors duration-300"
+                        <div className="rounded-xl p-[0.1rem] bg-white toggle-bg transition-colors duration-300 active:scale-[0.98]"
                             onClick={(e) => 
                             {
                                 flashGray(e.currentTarget);

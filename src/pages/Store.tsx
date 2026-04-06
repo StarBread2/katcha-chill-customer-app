@@ -12,6 +12,9 @@ import { ShoppingCart_Icon, GymBg } from '../assets/assets.ts';
 import { useUser } from "../context/UserContext";
 import { addToCart } from "../services/userCartService.tsx";
 
+
+
+
 type addToCartPressed = 
 {
     pressed?: boolean | null;
@@ -101,8 +104,11 @@ export default function Store()
                 backgroundPosition: "center 0%",
                 }}
         > 
+
             {/* CART, ORDERS ICON, AND SEARCH BAR */}
-            <HeaderTopBar searchQuery={setSearchQuery}/>
+            {!displayAddToCartPopup && (
+                <HeaderTopBar searchQuery={setSearchQuery}/>
+            )}
             
             {/* TOP SHIT */}
             <div className=" text-5xl font-bebas leading-tight relative h-[355px] flex flex-col justify-center items-center px-6 pb-20 mt-10 text-center">
@@ -113,15 +119,15 @@ export default function Store()
             </div>
             
             {/* MAIN BOTTOM SHIT */}
-            <div className="relative bg-[#e7e2e7] rounded-t-[50px] -mt-12 w-full pb-[130px]">
+            <div className="relative bg-[#e7e2e7] rounded-t-[50px] -mt-12 w-full pb-[70px]">
                 <h3 className="font-bold -mt-20 px-6 text-white mb-3">Featured Products</h3>
                 {/* Featured Products */}
                 <FeaturedProducts setAddToCartPressed={setAddToCartPressed}/>
                 
                 {/* Products Box */}
-                <div className="px-2">
-                    <div className="relative px-4 py-3 mt-6 bg-white rounded-[20px]">
-                        <h2 className="font-bold text-xl mb-3 ">Products</h2>
+                <div className="px-1.5">
+                    <div className="relative px-4 pb-[50px] py-3 mt-6 bg-white rounded-[20px]">
+                        <h2 className="font-bold text-xl mt-3 mb-3 ">Products</h2>
                         {/* Products */}
                         <Products setAddToCartPressed={setAddToCartPressed} searchQuery={searchQuery}/>
                     </div>

@@ -51,11 +51,11 @@ export default function HeaderTopBar({ searchQuery }: HeaderProps)
 
                 {/* Shoppin Cart and Order Icon */}
                 <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-1 py-1 rounded-full">
-                    <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center" 
+                    <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center active:scale-[0.98] transition" 
                         onClick={() => navigate("/store/cart")}>
                         <img src={ShoppingCart_Black_Icon} alt="Settings" className="w-[18px] h-[18px] mr-[1px]" />
                     </div>
-                    <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center" 
+                    <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center active:scale-[0.98] transition" 
                         onClick={() => navigate("/store/orders")}>
                         <img src={Orders_Icon} alt="Settings" className="w-[22px] h-[22px] " />
                     </div>
