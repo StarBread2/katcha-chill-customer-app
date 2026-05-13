@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { FaChevronDown } from "react-icons/fa";
+//NPM
+import { Filter } from "bad-words";
 //PARTIALS
 import HeaderNav from "../Partials/HeaderNav.tsx";
 import StarRating from "../Partials/StarRating.tsx"
@@ -66,6 +68,8 @@ interface ModalProps
 
 export default function AddToCartPopup({productPressedID, onClose, setButtonPressed, setquantityTotal, currentValueQuantity = 1, footerButtonText, cantChangeIfQuantityIsSame = false, quantityTotal = 0}: ModalProps) 
 {
+    
+
     //#region PRESSED PRODUCT
         //DB USED TO GET PRODUCT BY ID IN CURRENT USER CONTEXT (NO DB FETCH SHITS)
         const { getStoreProductById, storeProducts } = useUser();
@@ -213,7 +217,7 @@ export default function AddToCartPopup({productPressedID, onClose, setButtonPres
                         product_id: productPressedID,
                         order_item_id: status.order_item_id,
                         rating: userRating,
-                        review_text: reviewContent
+                        review_text: cleanReviewText
                     });
 
                     // TURN VALUES TO DEFAULT AFTER createReview
@@ -268,6 +272,10 @@ export default function AddToCartPopup({productPressedID, onClose, setButtonPres
                     }
                 });
             //#endregion
+        
+        //Input Santitation (Remove bad words) 
+        const profanityFilter = new Filter();
+        const cleanReviewText = profanityFilter.clean(reviewContent);
     // #endregion
 
     return createPortal(
@@ -400,7 +408,8 @@ export default function AddToCartPopup({productPressedID, onClose, setButtonPres
                                             className="w-full border border-gray-300 px-3 py-2 text-sm h-[120px] resize-none outline-none"
                                         />
                                     </div>
-
+                                    
+                                    {/* Submit Review */}
                                     <button 
                                         onClick={handleSubmitReview}
                                         className={`mt-6 w-[60%] bg-[#FDB927] text-[#FFFFFF] font-semibold text-base py-[10px] rounded-[6px] flex items-center justify-center gap-2 active:scale-[0.98] transition`}

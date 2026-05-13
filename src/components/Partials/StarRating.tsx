@@ -60,12 +60,14 @@ export default function StarRating({
                             key={i}
                             data-star={i}
 
+                            // Onclick
                             onClick={() => 
                             {
                                 if (!interactive) return;
                                 onChange?.(i); // return selected rating
                             }}
 
+                            // first long press
                             onPointerDown={(e) => 
                             {
                                 if (!interactive) return;
@@ -85,6 +87,7 @@ export default function StarRating({
                                 }
                             }}
 
+                            // hover click
                             onPointerMove={(e) => 
                             {
                                 if (!interactive) return;
