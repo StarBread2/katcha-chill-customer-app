@@ -5,7 +5,7 @@ import FeaturedProducts from "../components/Store/FeaturedProducts.tsx"
 import Products from "../components/Store/Products.tsx"
 //PARTIALS
 import HeaderTopBar from "../components/Store/HeaderTopBar_Store.tsx"
-import AddToCartPopUp from "../components/Partials/AddToCartPopUp.tsx"
+import AddToCartPopUp from "../components/Store/SelectedProduct.tsx"
 //SVG
 import { ShoppingCart_Icon, GymBg } from '../assets/assets.ts';
 //DB

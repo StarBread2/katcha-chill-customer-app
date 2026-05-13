@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { FaChevronDown } from "react-icons/fa";
 //PARTIALS
-import HeaderNav from "../../components/Partials/HeaderNav";
-import StarRating from "../../components/Partials/StarRating.tsx"
-import FooterButton from "../../components/Partials/FooterButton.tsx"
+import HeaderNav from "../Partials/HeaderNav.tsx";
+import StarRating from "../Partials/StarRating.tsx"
+import FooterButton from "../Partials/FooterButton.tsx"
 import ModalConfirmation from "../Partials/modalConfirmation.tsx";
 //SVG
 import { Close_Icon } from "../../assets/assets.ts";

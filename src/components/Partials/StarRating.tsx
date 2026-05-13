@@ -41,7 +41,7 @@ export default function StarRating({
             
             {/* STAR */}
             <div 
-                className={`flex text-[#FDB927] ${interactive ? "cursor-pointer" : ""}`}
+                className={`flex text-[#FDB927] touch-none ${interactive ? "cursor-pointer" : ""}`}
                 style={{ fontSize: `${sizePxStar}px` }}
             >
                 {[1, 2, 3, 4, 5].map((i) => {
@@ -58,9 +58,53 @@ export default function StarRating({
                     return (
                         <span
                             key={i}
-                            onClick={() => {
+                            data-star={i}
+
+                            onClick={() => 
+                            {
                                 if (!interactive) return;
                                 onChange?.(i); // return selected rating
+                            }}
+
+                            onPointerDown={(e) => 
+                            {
+                                if (!interactive) return;
+
+                                const element = document.elementFromPoint(
+                                    e.clientX,
+                                    e.clientY
+                                );
+
+                                const starValue = element
+                                    ?.closest("[data-star]")
+                                    ?.getAttribute("data-star");
+
+                                if (starValue)
+                                {
+                                    onChange?.(Number(starValue));
+                                }
+                            }}
+
+                            onPointerMove={(e) => 
+                            {
+                                if (!interactive) return;
+
+                                // only update while mouse/finger is pressed
+                                if (e.buttons !== 1) return;
+
+                                const element = document.elementFromPoint(
+                                    e.clientX,
+                                    e.clientY
+                                );
+
+                                const starValue = element
+                                    ?.closest("[data-star]")
+                                    ?.getAttribute("data-star");
+
+                                if (starValue)
+                                {
+                                    onChange?.(Number(starValue));
+                                }
                             }}
                         >
                             <StarIcon />

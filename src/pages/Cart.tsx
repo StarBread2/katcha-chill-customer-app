@@ -6,7 +6,7 @@ import RenderCartInstance from "../components/Cart/RenderCartInstance.tsx";
 import HeaderNav from "../components/Partials/HeaderNav";
 import FooterButton from "../components/Partials/FooterButton";
 import ModalConfirmation from "../components/Partials/modalConfirmation.tsx";
-import AddToCartPopUp from "../components/Partials/AddToCartPopUp.tsx"
+import AddToCartPopUp from "../components/Store/SelectedProduct.tsx"
 //DB
 import { useUser } from "../context/UserContext";
 
