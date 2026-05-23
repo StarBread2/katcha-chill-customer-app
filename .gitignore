@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#Additionals:
+katcha-chill-customer-appp.code-workspace
+SQL typeshit.sql
