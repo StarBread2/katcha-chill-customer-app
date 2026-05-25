@@ -10,6 +10,55 @@ The system was designed to modernize gym operations by replacing manual attendan
 > Status: Active Development
 
 ## Features
+### User Authentication
+
+- Google OAuth integration using Supabase Auth
+- Secure login, session persistence, and protected routes
+
+### Crowd Monitoring
+
+- Gym crowd monitoring and active member tracking
+- Weekly crowd history tracking with data visualization
+- Hourly gym population breakdown per day
+
+### Personal Analytics
+
+- Personal gym usage insights and attendance history (workout duration and check-in tracking)
+- Weekly, monthly, and yearly analytics
+- Daily activity minute breakdown with historical data navigation
+
+### Credit System
+
+- Credit-based gym access management
+- Credit package browsing and purchase system
+- Realtime notifications for purchase approval and validation
+
+### Check-In System
+
+- QR-based gym check-in authentication
+- One-tap manual check-out workflow
+- Automatic credit deduction per gym session
+- Staff-validated attendance and session tracking
+
+### Store System
+
+- In-app gym merchandise and supplements store
+- Product browsing with pricing, descriptions, and stock visibility
+- Shopping cart and checkout management system
+- Purchase history support
+
+### Product Reviews
+
+- Product reviews with star ratings and comments
+- Review submission restricted to verified purchasers
+- One review per user per product limitation
+- Profanity filtering and content moderation system
+
+### UI / UX
+
+- Modular and reusable component architecture
+- Centralized error handling and feedback modal system
+- Optimized navigation and smooth user interaction flow
 
 
 ## Tech Stack
