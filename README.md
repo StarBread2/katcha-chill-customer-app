@@ -29,31 +29,39 @@ The system was designed to modernize gym operations by replacing manual attendan
 
 ## Screenshots
 ### Login UI Flow
-![LoginUI](./previews/Login.png)
+<img src="./previews/Login.png" height="500">
 
 ### Main UI Screens
-![MainUI](./previews/Mains.png)
+<img src="./previews/Mains.png" height="500">
+
+### Gym Progress Screen
+<img src="./previews/Progress.png" height="500">
 
 ### Credit Packages Screen
-![CreditPackagesUI](./previews/Credit%20Packages.png)
+<img src="./previews/Credit%20Packages.png" height="500">
 
 ### Crowd Details Screen
-![CrowdDetailsUI](./previews/Crowd%20Details.png)
+<img src="./previews/Crowd%20Details.png" height="500">
 
 ### Add Credits UI Flow
-![AddCreditsUI](./previews/Add%20Credits.png)
+<img src="./previews/Add%20Credits.png" height="500">
 
 ### Check-In UI Flow
-![CheckInUI](./previews/Check%20In.png)
+<img src="./previews/Check%20In.png" height="500">
 
-### Shop and Add to Cart Screens 
-![ShopUI](./previews/Shop.png)
-
-### Product Review UI Flow
-![ProductReviewUI](./previews/Product%20Review.png)
+### Shop and Add to Cart Screens
+<img src="./previews/Shop.png" height="500">
 
 ### Product Review UI Flow
-![ProductReviewUI](./previews/Product%20Review.png)
+<img src="./previews/Product%20Review.png" height="500">
+
+### Add to Cart UI Flow
+<img src="./previews/Cart%20and%20Checkout.png" height="500">
+
+### Check Out Order UI Flow
+<img src="./previews/Check%20Out.png" height="500">
+
+
 
 
 ## Installation
