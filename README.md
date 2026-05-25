@@ -20,6 +20,12 @@ The system was designed to modernize gym operations by replacing manual attendan
   
 ### Backend / BaaS
 - Supabase
+  - Google OAuth Authentication
+  - PostgreSQL Database
+  - PostgreSQL Functions & Triggers
+  - Row-Level Security (RLS)
+  - Realtime Subscriptions
+  - Storage Buckets
 
 ### Design
 - Figma
@@ -60,9 +66,6 @@ The system was designed to modernize gym operations by replacing manual attendan
 
 ### Check Out Order UI Flow
 <img src="./previews/Check%20Out.png" height="500">
-
-
-
 
 ## Installation
 
