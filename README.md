@@ -66,6 +66,8 @@ The system was designed to modernize gym operations by replacing manual attendan
 - React
 - TypeScript
 - Tailwind CSS
+- Vite
+- Framer Motion
   
 ### Backend / BaaS
 - Supabase
