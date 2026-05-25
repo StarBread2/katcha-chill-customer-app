@@ -113,7 +113,7 @@ The system was designed to modernize gym operations by replacing manual attendan
 ### Add to Cart UI Flow
 <img src="./previews/Cart%20and%20Checkout.png" height="500">
 
-### Check Out Order UI Flow
+### Check Out UI Flow
 <img src="./previews/Check%20Out.png" height="500">
 
 ## Installation
