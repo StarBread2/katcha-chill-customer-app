@@ -118,7 +118,8 @@ The system was designed to modernize gym operations by replacing manual attendan
 ### Check Out UI Flow
 <img src="./previews/Check%20Out.png" height="500">
 
-## Installation
+## Notes
+This project was developed as part of a collaborative university project. This repository focuses on the customer-side mobile application, while the gym management/admin system was developed separately by another project collaborator.
 
 ## License
 This project is intended for educational and portfolio purposes.
