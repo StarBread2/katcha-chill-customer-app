@@ -5,7 +5,7 @@
 ## Description
 Katcha Chill Fitness App is a mobile gym management application developed for a local gym client as part of a university project.
 
-The system was designed to modernize gym operations by replacing manual attendance tracking and package management with a real-time mobile platform. Features include real-time crowd monitoring with gym traffic insights, QR and credit-based check-ins, an integrated store, personal gym usage analytics, and Google OAuth authentication for secure login.
+The system was designed to modernize gym operations by replacing manual attendance tracking and package management with a real-time mobile platform. Features include real-time crowd monitoring with gym traffic insights, QR and credit-based check-ins, an integrated store, personal gym usage analytics, and Google OAuth authentication for login.
 
 > Status: Active Development
 
@@ -13,7 +13,7 @@ The system was designed to modernize gym operations by replacing manual attendan
 ### User Authentication
 
 - Google OAuth integration using Supabase Auth
-- Secure login, session persistence, and protected routes
+- Session persistence and protected routes
 
 ### Crowd Monitoring
 
@@ -120,6 +120,3 @@ The system was designed to modernize gym operations by replacing manual attendan
 
 ## Notes
 This project was developed as part of a collaborative university project. This repository focuses on the customer-side mobile application, while the gym management/admin system was developed separately by another project collaborator.
-
-## License
-This project is intended for educational and portfolio purposes.
