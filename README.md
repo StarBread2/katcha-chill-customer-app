@@ -1,13 +1,19 @@
-# Katcha Chill and Fitness App
-
 ![Main](./previews/Mains.png)
 
-## Description
-Katcha Chill Fitness App is a mobile gym management application developed for a local gym client as part of a university project.
+# Katcha Chill and Fitness App
 
-The system was designed to modernize gym operations by replacing manual attendance tracking and package management with a real-time mobile platform. Features include real-time crowd monitoring with gym traffic insights, QR and credit-based check-ins, an integrated store, personal gym usage analytics, and Google OAuth authentication for login.
+## Description
+Mobile gym companion app for a local gym client featuring real-time crowd monitoring with gym traffic insights, QR and credit-based check-ins, an integrated store, personal gym usage analytics, and Google OAuth authentication for login.
+
+Built with React, TypeScript, Tailwind CSS, and Supabase.
 
 > Status: Active Development
+
+## Live Demo
+
+🔗 https://katchachillmobile.netlify.app/
+
+> For desktop viewing, use your browser's mobile device emulator (DevTools → Toggle Device Toolbar).
 
 ## Features
 ### User Authentication
@@ -17,28 +23,24 @@ The system was designed to modernize gym operations by replacing manual attendan
 
 ### Crowd Monitoring
 
-- Gym crowd monitoring and active member tracking
-- Weekly crowd history tracking with data visualization
-- Hourly gym population breakdown per day
+- Weekly and hourly gym crowd monitoring with data visualization
 
 ### Personal Analytics
 
-- Personal gym usage insights and attendance history (workout duration and check-in tracking)
-- Weekly, monthly, and yearly analytics
+- Weekly, monthly, and yearly personal gym usage insights and attendance history
 - Daily activity minute breakdown with historical data navigation
 
 ### Credit System
 
 - Credit-based gym access management
 - Credit package browsing and purchase system
-- Realtime notifications for purchase approval and validation
+- Realtime notifications for purchase approval
 
 ### Check-In System
 
-- QR-based gym check-in authentication
+- QR and credit based gym check-in authentication
 - One-tap manual check-out workflow
 - Automatic credit deduction per gym session
-- Staff-validated attendance and session tracking
 
 ### Store System
 
@@ -49,15 +51,12 @@ The system was designed to modernize gym operations by replacing manual attendan
 
 ### Product Reviews
 
-- Product reviews with star ratings and comments
-- Review submission restricted to verified purchasers
-- One review per user per product limitation
-- Profanity filtering and content moderation system
+- Verified-purchase reviews with ratings, comments, and moderation controls (profanity filtering)
 
 ### UI / UX
 
 - Modular and reusable component architecture
-- Centralized error handling and feedback modal system
+- Centralized error handling modal system
 - Optimized navigation and smooth user interaction flow
 
 
@@ -83,9 +82,6 @@ The system was designed to modernize gym operations by replacing manual attendan
 
 ### Deployment
 - Netlify
-
-## Notes
-This project was developed as part of a collaborative university project. This repository focuses on the customer-side mobile application, while the gym management/admin system was developed separately by another project collaborator.
 
 ## Screenshots
 ### Login UI Flow
@@ -120,3 +116,6 @@ This project was developed as part of a collaborative university project. This r
 
 ### Check Out UI Flow
 <img src="./previews/Check%20Out.png" height="500">
+
+## Notes
+This project was developed as part of a collaborative university project. This repository focuses on the customer-side mobile application, while the gym management/admin system was developed separately by another project collaborator.
